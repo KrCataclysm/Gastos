@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <base href="/gastos/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+    <meta name="theme-color" content="#101425" />
+    <meta name="description" content="Gastos: controle completo de receitas e despesas, direto do seu celular." />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Gastos" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <title>Gastos - Controle de Gastos</title>
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem("gastos:theme");
+          if (!raw) return;
+          var t = JSON.parse(raw);
+          var r = document.documentElement.style;
+          r.setProperty("--color-bg", t.bgColor);
+          r.setProperty("--color-panel", t.panelColor);
+          r.setProperty("--color-panel-alt", t.panelAltColor);
+          r.setProperty("--color-border", t.borderColor);
+          r.setProperty("--color-text", t.fontColor);
+          r.setProperty("--color-text-muted", t.mutedColor);
+          r.setProperty("--color-accent", t.accentColor);
+          r.setProperty("--color-income", t.incomeColor);
+          r.setProperty("--color-expense", t.expenseColor);
+          r.setProperty("--color-radius", t.radius + "px");
+          r.setProperty("--toast-bg", t.toastBg);
+          r.setProperty("--toast-text", t.toastText);
+          r.setProperty("--toast-success", t.toastSuccess);
+          r.setProperty("--toast-error", t.toastError);
+          r.setProperty("--toast-warning", t.toastWarning);
+          r.setProperty("--toast-info", t.toastInfo);
+          var fonts = {
+            inter: '"Inter", system-ui, sans-serif',
+            roboto: '"Roboto", system-ui, sans-serif',
+            poppins: '"Poppins", system-ui, sans-serif',
+            nunito: '"Nunito", system-ui, sans-serif',
+            montserrat: '"Montserrat", system-ui, sans-serif',
+            "jetbrains-mono": '"JetBrains Mono", ui-monospace, monospace',
+            merriweather: '"Merriweather", Georgia, serif',
+            quicksand: '"Quicksand", system-ui, sans-serif',
+          };
+          r.setProperty("--font-family", fonts[t.fontFamily] || fonts.inter);
+          document.documentElement.style.colorScheme = t.mode;
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="assets/index-BlK1S1C0.js"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-LgdQ06Q-.css">
+  <link rel="manifest" href="manifest.webmanifest"></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
