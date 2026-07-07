@@ -27,12 +27,12 @@ const PRIMARY_NAV: NavItem[] = [
   { to: "/", label: "Início", icon: LayoutDashboard, end: true },
   { to: "/lancamentos", label: "Lançamentos", icon: Receipt },
   { to: "/orcamento", label: "Orçamento", icon: Target },
+  { to: "/metas", label: "Metas", icon: Trophy },
   { to: "/relatorios", label: "Relatórios", icon: PieChart },
+  { to: "/ferramentas", label: "Ferramentas", icon: Wrench },
 ];
 
 const SECONDARY_NAV: NavItem[] = [
-  { to: "/metas", label: "Metas", icon: Trophy },
-  { to: "/ferramentas", label: "Ferramentas", icon: Wrench },
   { to: "/categorias", label: "Categorias", icon: Tags },
   { to: "/contas", label: "Contas", icon: Landmark },
   { to: "/configuracoes", label: "Configurações", icon: Settings },
@@ -53,7 +53,7 @@ export function AppShell() {
             className={({ isActive }) => `nav-item${isActive ? " active" : ""}`}
           >
             <item.icon size={18} />
-            {item.label}
+            <span className="nav-item__label">{item.label}</span>
           </NavLink>
         ))}
         <div style={{ marginTop: "auto", paddingTop: 16 }}>
@@ -83,12 +83,12 @@ export function AppShell() {
             className={({ isActive }) => `nav-item${isActive ? " active" : ""}`}
           >
             <item.icon size={20} />
-            {item.label}
+            <span className="nav-item__label">{item.label}</span>
           </NavLink>
         ))}
         <NavLink to="/mais" className={({ isActive }) => `nav-item${isActive ? " active" : ""}`}>
           <MoreHorizontal size={20} />
-          Mais
+          <span className="nav-item__label">Mais</span>
         </NavLink>
       </nav>
     </div>

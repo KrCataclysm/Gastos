@@ -1,23 +1,27 @@
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Download, Printer } from "lucide-react";
 import { addMonths, endOfMonth, startOfMonth } from "date-fns";
+import { useAuth } from "@/contexts/AuthContext";
 import { useData } from "@/contexts/DataContext";
 import { MonthlyBarChart } from "@/components/charts/MonthlyBarChart";
 import { CategoryPieChart } from "@/components/charts/CategoryPieChart";
-import { buildDRE, categoryDistribution, lastNMonthsSeries, monthTotals } from "@/lib/calc";
+import { buildDRE, categoryDistribution, lastNMonthsSeries, monthsSinceRegistration, monthTotals } from "@/lib/calc";
 import { formatCurrency, formatPercent, monthLabel } from "@/lib/format";
 import { downloadCsv, transactionsToCsv } from "@/lib/csv";
 
 export function ReportsPage() {
   const { transactions, categories, accounts } = useData();
+  const { user } = useAuth();
   const [cursor, setCursor] = useState(new Date());
   const year = cursor.getFullYear();
   const month = cursor.getMonth() + 1;
   const start = startOfMonth(cursor);
   const end = endOfMonth(cursor);
+  const registeredAt = user?.created_at ? new Date(user.created_at) : cursor;
+  const seriesMonths = monthsSinceRegistration(registeredAt, cursor, 12);
 
   const dre = useMemo(() => buildDRE(transactions, categories, start, end), [transactions, categories, start, end]);
-  const series = useMemo(() => lastNMonthsSeries(transactions, 12, cursor), [transactions, cursor]);
+  const series = useMemo(() => lastNMonthsSeries(transactions, seriesMonths, cursor), [transactions, seriesMonths, cursor]);
   const distribution = useMemo(
     () => categoryDistribution(transactions, categories, start, end, "expense").slice(0, 8),
     [transactions, categories, start, end],
@@ -98,7 +102,9 @@ export function ReportsPage() {
       </div>
 
       <div className="card">
-        <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Evolução — últimos 12 meses</h3>
+        <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>
+          Evolução — {seriesMonths === 1 ? "este mês" : `últimos ${seriesMonths} meses`}
+        </h3>
         <MonthlyBarChart data={series} />
       </div>
 

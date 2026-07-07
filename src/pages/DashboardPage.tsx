@@ -13,6 +13,7 @@ import {
   budgetConsumption,
   lastNMonthsSeries,
   monthEndProjection,
+  monthsSinceRegistration,
   monthTotals,
   savingsRate,
   totalNetWorth,
@@ -27,6 +28,8 @@ export function DashboardPage() {
   const displayName = firstTwoNames(
     (user?.user_metadata?.display_name as string | undefined) ?? user?.email?.split("@")[0],
   );
+  const registeredAt = user?.created_at ? new Date(user.created_at) : now;
+  const seriesMonths = monthsSinceRegistration(registeredAt, now, 6);
 
   const netWorth = useMemo(() => totalNetWorth(accounts, transactions), [accounts, transactions]);
   const monthNow = monthTotals(transactions, now.getFullYear(), now.getMonth() + 1);
@@ -35,7 +38,7 @@ export function DashboardPage() {
     () => monthEndProjection(transactions, categories, recurringTransactions, now),
     [transactions, categories, recurringTransactions],
   );
-  const series = useMemo(() => lastNMonthsSeries(transactions, 6, now), [transactions]);
+  const series = useMemo(() => lastNMonthsSeries(transactions, seriesMonths, now), [transactions, seriesMonths]);
   const budgetLines = useMemo(
     () =>
       budgetConsumption(transactions, categories, budgets, now.getFullYear(), now.getMonth() + 1)
@@ -118,7 +121,9 @@ export function DashboardPage() {
       </div>
 
       <div className="card">
-        <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Receitas x despesas — últimos 6 meses</h3>
+        <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>
+          Receitas x despesas — {seriesMonths === 1 ? "este mês" : `últimos ${seriesMonths} meses`}
+        </h3>
         <MonthlyBarChart data={series} />
       </div>
 
