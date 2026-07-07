@@ -22,9 +22,6 @@ export function SettingsPage() {
       <div className="card">
         <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Conta</h3>
         <div className="text-muted" style={{ fontSize: 14 }}>{user?.email}</div>
-        <div style={{ fontSize: 12, marginTop: 4 }}>
-          <span className="badge badge--neutral">Plano gratuito</span>
-        </div>
       </div>
 
       <div className="card">
