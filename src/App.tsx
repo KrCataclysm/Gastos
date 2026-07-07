@@ -18,6 +18,8 @@ import { MorePage } from "@/pages/MorePage";
 
 const DashboardPage = lazy(() => import("@/pages/DashboardPage").then((m) => ({ default: m.DashboardPage })));
 const ReportsPage = lazy(() => import("@/pages/ReportsPage").then((m) => ({ default: m.ReportsPage })));
+const GoalsPage = lazy(() => import("@/pages/GoalsPage").then((m) => ({ default: m.GoalsPage })));
+const ToolsPage = lazy(() => import("@/pages/ToolsPage").then((m) => ({ default: m.ToolsPage })));
 
 function PageFallback() {
   return (
@@ -75,6 +77,22 @@ function Router() {
         <Route path="/categorias" element={<CategoriesPage />} />
         <Route path="/contas" element={<AccountsPage />} />
         <Route path="/orcamento" element={<BudgetPage />} />
+        <Route
+          path="/metas"
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <GoalsPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/ferramentas"
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <ToolsPage />
+            </Suspense>
+          }
+        />
         <Route
           path="/relatorios"
           element={

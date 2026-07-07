@@ -8,6 +8,8 @@ import {
   Settings,
   Tags,
   Target,
+  Trophy,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 
@@ -29,6 +31,8 @@ const PRIMARY_NAV: NavItem[] = [
 ];
 
 const SECONDARY_NAV: NavItem[] = [
+  { to: "/metas", label: "Metas", icon: Trophy },
+  { to: "/ferramentas", label: "Ferramentas", icon: Wrench },
   { to: "/categorias", label: "Categorias", icon: Tags },
   { to: "/contas", label: "Contas", icon: Landmark },
   { to: "/configuracoes", label: "Configurações", icon: Settings },

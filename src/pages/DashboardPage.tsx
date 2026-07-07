@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Plus, TrendingDown, TrendingUp, Receipt } from "lucide-react";
 import { useData } from "@/contexts/DataContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { SyncBadge } from "@/components/layout/SyncBadge";
 import { TransactionForm } from "@/components/transactions/TransactionForm";
 import { ProgressBar } from "@/components/ui/ProgressBar";
@@ -16,12 +17,16 @@ import {
   savingsRate,
   totalNetWorth,
 } from "@/lib/calc";
-import { formatCurrency, formatDate, formatPercent, monthLabel } from "@/lib/format";
+import { firstTwoNames, formatCurrency, formatDate, formatPercent, greeting, monthLabel } from "@/lib/format";
 
 export function DashboardPage() {
   const { accounts, categories, transactions, budgets, recurringTransactions, loading } = useData();
+  const { user } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const now = new Date();
+  const displayName = firstTwoNames(
+    (user?.user_metadata?.display_name as string | undefined) ?? user?.email?.split("@")[0],
+  );
 
   const netWorth = useMemo(() => totalNetWorth(accounts, transactions), [accounts, transactions]);
   const monthNow = monthTotals(transactions, now.getFullYear(), now.getMonth() + 1);
@@ -53,7 +58,9 @@ export function DashboardPage() {
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <div className="topbar">
         <div>
-          <div className="topbar__title">Olá 👋</div>
+          <div className="topbar__title">
+            {greeting(now)}{displayName ? `, ${displayName}` : ""} 👋
+          </div>
           <div className="text-muted" style={{ fontSize: 13 }}>
             {monthLabel(now.getFullYear(), now.getMonth() + 1)}
           </div>
