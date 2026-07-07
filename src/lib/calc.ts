@@ -4,6 +4,7 @@ import {
   addWeeks,
   addYears,
   differenceInCalendarDays,
+  differenceInCalendarMonths,
   endOfMonth,
   getDaysInMonth,
   isAfter,
@@ -285,6 +286,15 @@ export function lastNMonthsSeries(
     out.push({ year: d.getFullYear(), month: d.getMonth() + 1, ...totals });
   }
   return out;
+}
+
+export function monthsSinceRegistration(
+  registeredAt: Date,
+  referenceDate: Date,
+  maxMonths: number,
+): number {
+  const diff = differenceInCalendarMonths(startOfMonth(referenceDate), startOfMonth(registeredAt)) + 1;
+  return Math.min(maxMonths, Math.max(1, diff));
 }
 
 export function creditCardCycle(closingDay: number, referenceDate: Date = new Date()): { start: Date; end: Date } {

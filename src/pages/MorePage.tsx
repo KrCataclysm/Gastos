@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
-import { ChevronRight, Landmark, LogOut, Settings, Tags, Trophy, Wrench } from "lucide-react";
+import { ChevronRight, Landmark, LogOut, Settings, Tags } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { SyncBadge } from "@/components/layout/SyncBadge";
 
 const ITEMS = [
-  { to: "/metas", label: "Metas", icon: Trophy },
-  { to: "/ferramentas", label: "Ferramentas", icon: Wrench },
   { to: "/categorias", label: "Categorias", icon: Tags },
   { to: "/contas", label: "Contas e carteiras", icon: Landmark },
   { to: "/configuracoes", label: "Configurações", icon: Settings },
