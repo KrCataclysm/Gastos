@@ -14,12 +14,28 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+env:
+  VITE_SUPABASE_URL: https://khizjnhphngxbzveiguv.supabase.co
+  VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoaXpqbmhwaG5neGJ6dmVpZ3V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzODk3NTAsImV4cCI6MjA5ODk2NTc1MH0.ZB8PD5XzjGEu0pbgCZSkX424u_IafcdZKdq2ILMS7sE
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -29,7 +45,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "dist"
 
       - name: Deploy to GitHub Pages
         id: deployment
