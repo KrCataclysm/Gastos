@@ -2,19 +2,25 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <base href="/Gastos/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
     <meta name="theme-color" content="#101425" />
-    <meta name="description" content="Gastos: controle completo de receitas e despesas, direto do seu celular." />
+    <meta name="description" content="Gastos: sua planilha de custos profissional na palma da mão." />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Gastos" />
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
-    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/Gastos/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/Gastos/favicon-16.png" />
+    <link rel="apple-touch-icon" href="/Gastos/icons/apple-touch-icon.png" />
     <title>Gastos - Controle de Gastos</title>
     <script>
+      // Restaura a rota original após o redirect do 404.html (GitHub Pages SPA fallback).
+      (function () {
+        var redirect = new URLSearchParams(window.location.search).get("redirect");
+        if (redirect) {
+          window.history.replaceState(null, "", window.location.pathname.replace(/\/$/, "") + "/" + redirect);
+        }
+      })();
       (function () {
         try {
           var raw = localStorage.getItem("gastos:theme");
@@ -31,31 +37,13 @@
           r.setProperty("--color-income", t.incomeColor);
           r.setProperty("--color-expense", t.expenseColor);
           r.setProperty("--color-radius", t.radius + "px");
-          r.setProperty("--toast-bg", t.toastBg);
-          r.setProperty("--toast-text", t.toastText);
-          r.setProperty("--toast-success", t.toastSuccess);
-          r.setProperty("--toast-error", t.toastError);
-          r.setProperty("--toast-warning", t.toastWarning);
-          r.setProperty("--toast-info", t.toastInfo);
-          var fonts = {
-            inter: '"Inter", system-ui, sans-serif',
-            roboto: '"Roboto", system-ui, sans-serif',
-            poppins: '"Poppins", system-ui, sans-serif',
-            nunito: '"Nunito", system-ui, sans-serif',
-            montserrat: '"Montserrat", system-ui, sans-serif',
-            "jetbrains-mono": '"JetBrains Mono", ui-monospace, monospace',
-            merriweather: '"Merriweather", Georgia, serif',
-            quicksand: '"Quicksand", system-ui, sans-serif',
-          };
-          r.setProperty("--font-family", fonts[t.fontFamily] || fonts.inter);
           document.documentElement.style.colorScheme = t.mode;
         } catch (e) {}
       })();
     </script>
-    <script type="module" crossorigin src="assets/index-BlK1S1C0.js"></script>
-    <link rel="stylesheet" crossorigin href="assets/index-LgdQ06Q-.css">
-  <link rel="manifest" href="manifest.webmanifest"></head>
+  </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
