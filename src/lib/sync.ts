@@ -10,6 +10,7 @@ const SYNCABLE_TABLES: SyncTable[] = [
   "recurring_transactions",
   "transactions",
   "budgets",
+  "goals",
 ];
 
 type Listener = (status: SyncStatus) => void;

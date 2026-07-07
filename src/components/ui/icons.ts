@@ -7,6 +7,7 @@ import {
   Car,
   CreditCard,
   Dumbbell,
+  Flag,
   Gift,
   GraduationCap,
   HeartPulse,
@@ -18,6 +19,7 @@ import {
   Plug,
   PlusCircle,
   Repeat,
+  Rocket,
   ShoppingBag,
   ShoppingCart,
   Shirt,
@@ -25,6 +27,7 @@ import {
   Sparkles,
   Tag,
   TrendingUp,
+  Trophy,
   Users,
   Utensils,
   Wallet,
@@ -63,6 +66,9 @@ export const ICONS: Record<string, LucideIcon> = {
   briefcase: Briefcase,
   "paw-print": PawPrint,
   building: Building2,
+  flag: Flag,
+  rocket: Rocket,
+  trophy: Trophy,
 };
 
 export const ICON_CHOICES = Object.keys(ICONS);

@@ -53,3 +53,16 @@ export function toDateOnlyISO(d: Date): string {
 export function todayISO(): string {
   return toDateOnlyISO(new Date());
 }
+
+export function greeting(date: Date = new Date()): string {
+  const hour = date.getHours();
+  if (hour < 12) return "Bom dia";
+  if (hour < 18) return "Boa tarde";
+  return "Boa noite";
+}
+
+export function firstTwoNames(fullName: string | null | undefined): string {
+  if (!fullName) return "";
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  return parts.slice(0, 2).join(" ");
+}

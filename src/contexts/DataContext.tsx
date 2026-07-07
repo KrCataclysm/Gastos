@@ -17,6 +17,7 @@ import type {
   Account,
   Budget,
   Category,
+  Goal,
   RecurringTransaction,
   SpendingProfile,
   SyncStatus,
@@ -40,6 +41,7 @@ interface DataContextValue {
   tags: Tag[];
   transactions: Transaction[];
   budgets: Budget[];
+  goals: Goal[];
   recurringTransactions: RecurringTransaction[];
   saveAccount: (input: Draft<Account>) => Promise<Account>;
   removeAccount: (id: string) => Promise<void>;
@@ -51,6 +53,8 @@ interface DataContextValue {
   removeTransaction: (id: string) => Promise<void>;
   saveBudget: (input: Draft<Budget>) => Promise<Budget>;
   removeBudget: (id: string) => Promise<void>;
+  saveGoal: (input: Draft<Goal>) => Promise<Goal>;
+  removeGoal: (id: string) => Promise<void>;
   saveRecurring: (input: Draft<RecurringTransaction>) => Promise<RecurringTransaction>;
   removeRecurring: (id: string) => Promise<void>;
   syncNow: () => Promise<void>;
@@ -68,16 +72,18 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [recurringTransactions, setRecurringTransactions] = useState<RecurringTransaction[]>([]);
 
   const reload = useCallback(async () => {
-    const [sp, acc, cat, tg, txRaw, bud, rec] = await Promise.all([
+    const [sp, acc, cat, tg, txRaw, bud, goalsRaw, rec] = await Promise.all([
       getAllLocal("spending_profiles"),
       getAllLocal("accounts"),
       getAllLocal("categories"),
       getAllLocal("tags"),
       getAllLocal("transactions"),
       getAllLocal("budgets"),
+      getAllLocal("goals"),
       getAllLocal("recurring_transactions"),
     ]);
     const tagMap = syncEngine.tagMapCache;
@@ -92,6 +98,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         .sort((a, b) => b.date.localeCompare(a.date) || b.created_at.localeCompare(a.created_at)),
     );
     setBudgets(bud.filter((b) => !b.deleted_at));
+    setGoals(goalsRaw.filter((g) => !g.deleted_at).sort((a, b) => a.name.localeCompare(b.name)));
     setRecurringTransactions(rec.filter((r) => !r.deleted_at));
   }, []);
 
@@ -330,6 +337,45 @@ export function DataProvider({ children }: { children: ReactNode }) {
     [budgets],
   );
 
+  const saveGoal = useCallback(
+    async (input: Draft<Goal>) => {
+      if (!user || !spendingProfile) throw new Error("Sessão não carregada ainda.");
+      const id = input.id ?? newId();
+      const existing = goals.find((g) => g.id === id);
+      const record: Goal = {
+        id,
+        user_id: user.id,
+        profile_id: spendingProfile.id,
+        name: input.name ?? existing?.name ?? "Meta",
+        icon: input.icon ?? existing?.icon ?? "piggy-bank",
+        color: input.color ?? existing?.color ?? "#6366f1",
+        target_amount: input.target_amount ?? existing?.target_amount ?? 0,
+        current_amount: input.current_amount ?? existing?.current_amount ?? 0,
+        target_date: input.target_date !== undefined ? input.target_date : existing?.target_date ?? null,
+        account_id: input.account_id !== undefined ? input.account_id : existing?.account_id ?? null,
+        archived_at: input.archived_at ?? existing?.archived_at ?? null,
+        deleted_at: null,
+        created_at: existing?.created_at ?? nowIso(),
+        updated_at: nowIso(),
+      };
+      await persist("goals", record);
+      setGoals((prev) => [...prev.filter((g) => g.id !== id), record].sort((a, b) => a.name.localeCompare(b.name)));
+      return record;
+    },
+    [user, spendingProfile, goals],
+  );
+
+  const removeGoal = useCallback(
+    async (id: string) => {
+      const existing = goals.find((g) => g.id === id);
+      if (!existing) return;
+      const record = { ...existing, deleted_at: nowIso(), updated_at: nowIso() };
+      await persist("goals", record);
+      setGoals((prev) => prev.filter((g) => g.id !== id));
+    },
+    [goals],
+  );
+
   const saveRecurring = useCallback(
     async (input: Draft<RecurringTransaction>) => {
       if (!user || !spendingProfile) throw new Error("Sessão não carregada ainda.");
@@ -419,6 +465,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     tags,
     transactions,
     budgets,
+    goals,
     recurringTransactions,
     saveAccount,
     removeAccount,
@@ -430,6 +477,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     removeTransaction,
     saveBudget,
     removeBudget,
+    saveGoal,
+    removeGoal,
     saveRecurring,
     removeRecurring,
     syncNow,

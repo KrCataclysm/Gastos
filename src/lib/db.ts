@@ -3,6 +3,7 @@ import type {
   Account,
   Budget,
   Category,
+  Goal,
   QueuedMutation,
   RecurringTransaction,
   SpendingProfile,
@@ -20,6 +21,7 @@ interface GastosDB extends DBSchema {
     indexes: { updated_at: string; date: string; account_id: string };
   };
   budgets: { key: string; value: Budget; indexes: { updated_at: string } };
+  goals: { key: string; value: Goal; indexes: { updated_at: string } };
   recurring_transactions: {
     key: string;
     value: RecurringTransaction;
@@ -34,31 +36,37 @@ let dbPromise: Promise<IDBPDatabase<GastosDB>> | null = null;
 
 export function getDb() {
   if (!dbPromise) {
-    dbPromise = openDB<GastosDB>("gastos-db", 1, {
-      upgrade(db) {
-        const accounts = db.createObjectStore("accounts", { keyPath: "id" });
-        accounts.createIndex("updated_at", "updated_at");
+    dbPromise = openDB<GastosDB>("gastos-db", 2, {
+      upgrade(db, oldVersion) {
+        if (oldVersion < 1) {
+          const accounts = db.createObjectStore("accounts", { keyPath: "id" });
+          accounts.createIndex("updated_at", "updated_at");
 
-        const categories = db.createObjectStore("categories", { keyPath: "id" });
-        categories.createIndex("updated_at", "updated_at");
+          const categories = db.createObjectStore("categories", { keyPath: "id" });
+          categories.createIndex("updated_at", "updated_at");
 
-        const tags = db.createObjectStore("tags", { keyPath: "id" });
-        tags.createIndex("updated_at", "updated_at");
+          const tags = db.createObjectStore("tags", { keyPath: "id" });
+          tags.createIndex("updated_at", "updated_at");
 
-        const transactions = db.createObjectStore("transactions", { keyPath: "id" });
-        transactions.createIndex("updated_at", "updated_at");
-        transactions.createIndex("date", "date");
-        transactions.createIndex("account_id", "account_id");
+          const transactions = db.createObjectStore("transactions", { keyPath: "id" });
+          transactions.createIndex("updated_at", "updated_at");
+          transactions.createIndex("date", "date");
+          transactions.createIndex("account_id", "account_id");
 
-        const budgets = db.createObjectStore("budgets", { keyPath: "id" });
-        budgets.createIndex("updated_at", "updated_at");
+          const budgets = db.createObjectStore("budgets", { keyPath: "id" });
+          budgets.createIndex("updated_at", "updated_at");
 
-        const recurring = db.createObjectStore("recurring_transactions", { keyPath: "id" });
-        recurring.createIndex("updated_at", "updated_at");
+          const recurring = db.createObjectStore("recurring_transactions", { keyPath: "id" });
+          recurring.createIndex("updated_at", "updated_at");
 
-        db.createObjectStore("spending_profiles", { keyPath: "id" });
-        db.createObjectStore("mutation_queue", { keyPath: "queue_id" });
-        db.createObjectStore("meta");
+          db.createObjectStore("spending_profiles", { keyPath: "id" });
+          db.createObjectStore("mutation_queue", { keyPath: "queue_id" });
+          db.createObjectStore("meta");
+        }
+        if (oldVersion < 2) {
+          const goals = db.createObjectStore("goals", { keyPath: "id" });
+          goals.createIndex("updated_at", "updated_at");
+        }
       },
     });
   }
@@ -72,7 +80,7 @@ export async function getAllLocal<T extends keyof GastosDB>(
   return db.getAll(store as never);
 }
 
-export async function putLocal<T extends "accounts" | "categories" | "tags" | "transactions" | "budgets" | "recurring_transactions" | "spending_profiles">(
+export async function putLocal<T extends "accounts" | "categories" | "tags" | "transactions" | "budgets" | "goals" | "recurring_transactions" | "spending_profiles">(
   store: T,
   value: GastosDB[T]["value"],
 ): Promise<void> {
@@ -99,6 +107,7 @@ export async function clearAllLocal(): Promise<void> {
       "tags",
       "transactions",
       "budgets",
+      "goals",
       "recurring_transactions",
       "spending_profiles",
       "mutation_queue",

@@ -101,12 +101,24 @@ export interface Budget extends Syncable {
   amount: number;
 }
 
+export interface Goal extends Syncable {
+  name: string;
+  icon: string;
+  color: string;
+  target_amount: number;
+  current_amount: number;
+  target_date: string | null;
+  account_id: string | null;
+  archived_at: string | null;
+}
+
 export type SyncTable =
   | "accounts"
   | "categories"
   | "tags"
   | "transactions"
   | "budgets"
+  | "goals"
   | "recurring_transactions"
   | "spending_profiles";
 
