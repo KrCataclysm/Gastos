@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LogIn } from "lucide-react";
 import { AuthLayout } from "@/components/auth/AuthLayout";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function LoginPage() {
@@ -50,10 +51,8 @@ export function LoginPage() {
           </div>
           <div className="field">
             <label htmlFor="password">Senha</label>
-            <input
+            <PasswordInput
               id="password"
-              className="input"
-              type="password"
               autoComplete="current-password"
               required
               value={password}

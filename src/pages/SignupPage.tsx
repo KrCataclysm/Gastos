@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { MailCheck, UserPlus } from "lucide-react";
 import { AuthLayout } from "@/components/auth/AuthLayout";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function SignupPage() {
@@ -94,10 +95,8 @@ export function SignupPage() {
           </div>
           <div className="field">
             <label htmlFor="password">Senha</label>
-            <input
+            <PasswordInput
               id="password"
-              className="input"
-              type="password"
               autoComplete="new-password"
               required
               value={password}
@@ -107,10 +106,8 @@ export function SignupPage() {
           </div>
           <div className="field">
             <label htmlFor="confirm">Confirmar senha</label>
-            <input
+            <PasswordInput
               id="confirm"
-              className="input"
-              type="password"
               autoComplete="new-password"
               required
               value={confirmPassword}

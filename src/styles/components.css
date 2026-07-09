@@ -138,6 +138,36 @@
   border-color: var(--color-expense) !important;
 }
 
+.password-field {
+  position: relative;
+}
+
+.password-field__input {
+  padding-right: 44px;
+}
+
+.password-field__toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--color-radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.password-field__toggle:hover {
+  color: var(--color-text);
+  background: var(--color-panel-alt);
+}
+
 .error-text {
   color: var(--color-expense);
   font-size: 13px;
