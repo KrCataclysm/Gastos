@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { KeyRound, LogOut, Moon, Sun } from "lucide-react";
+import { KeyRound, LogOut, Moon, Pipette, RotateCcw, Sun, UserRound } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { ACCENT_PRESETS, FONT_OPTIONS, useTheme } from "@/contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
@@ -7,10 +7,13 @@ import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useToast } from "@/components/ui/Toast";
 
 export function SettingsPage() {
-  const { theme, setMode, setAccentColor, setFontFamily, setRadius } = useTheme();
-  const { user, signOut, updatePassword } = useAuth();
+  const { theme, setMode, setAccentColor, setFontFamily, setRadius, setBgColor, setPanelColor, resetBgColor, resetPanelColor } = useTheme();
+  const { user, signOut, updatePassword, updateDisplayName } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
+
+  const [nickname, setNickname] = useState((user?.user_metadata?.display_name as string | undefined) ?? "");
+  const [savingNickname, setSavingNickname] = useState(false);
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,6 +23,18 @@ export function SettingsPage() {
   async function handleSignOut() {
     await signOut();
     navigate("/login", { replace: true });
+  }
+
+  async function handleSaveNickname(e: FormEvent) {
+    e.preventDefault();
+    setSavingNickname(true);
+    const result = await updateDisplayName(nickname.trim());
+    setSavingNickname(false);
+    if (result.error) {
+      toast.show(result.error, "error");
+      return;
+    }
+    toast.show("Apelido atualizado.", "success");
   }
 
   async function handleChangePassword(e: FormEvent) {
@@ -53,7 +68,23 @@ export function SettingsPage() {
 
       <div className="card">
         <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Conta</h3>
-        <div className="text-muted" style={{ fontSize: 14 }}>{user?.email}</div>
+        <div className="text-muted" style={{ fontSize: 14, marginBottom: 14 }}>{user?.email}</div>
+        <form className="auth-form" onSubmit={handleSaveNickname}>
+          <div className="field">
+            <label htmlFor="nickname">Apelido</label>
+            <input
+              id="nickname"
+              className="input"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="Como quer ser chamado(a)?"
+              maxLength={60}
+            />
+          </div>
+          <button className="btn btn--secondary btn--block" type="submit" disabled={savingNickname}>
+            <UserRound size={16} /> {savingNickname ? "Salvando…" : "Salvar apelido"}
+          </button>
+        </form>
       </div>
 
       <div className="card">
@@ -105,7 +136,7 @@ export function SettingsPage() {
 
         <div className="field" style={{ marginBottom: 16 }}>
           <label>Cor de destaque</label>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             {ACCENT_PRESETS.map((c) => (
               <button
                 key={c}
@@ -121,6 +152,36 @@ export function SettingsPage() {
                 aria-label={c}
               />
             ))}
+            <label className="color-picker" title="Escolher outra cor" aria-label="Cor de destaque personalizada">
+              <input type="color" value={theme.accentColor} onChange={(e) => setAccentColor(e.target.value)} />
+              <Pipette size={14} className="color-picker__icon" />
+            </label>
+          </div>
+        </div>
+
+        <div className="field" style={{ marginBottom: 16 }}>
+          <label>Cor de fundo</label>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <label className="color-picker" title="Escolher cor de fundo" aria-label="Cor de fundo">
+              <input type="color" value={theme.bgColor} onChange={(e) => setBgColor(e.target.value)} />
+            </label>
+            <span className="text-muted" style={{ fontSize: 13, flex: 1 }}>{theme.bgColor}</span>
+            <button type="button" className="chip" onClick={resetBgColor} title="Restaurar padrão">
+              <RotateCcw size={14} /> Padrão
+            </button>
+          </div>
+        </div>
+
+        <div className="field" style={{ marginBottom: 16 }}>
+          <label>Cor dos painéis</label>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <label className="color-picker" title="Escolher cor dos painéis" aria-label="Cor dos painéis">
+              <input type="color" value={theme.panelColor} onChange={(e) => setPanelColor(e.target.value)} />
+            </label>
+            <span className="text-muted" style={{ fontSize: 13, flex: 1 }}>{theme.panelColor}</span>
+            <button type="button" className="chip" onClick={resetPanelColor} title="Restaurar padrão">
+              <RotateCcw size={14} /> Padrão
+            </button>
           </div>
         </div>
 

@@ -138,6 +138,38 @@
   border-color: var(--color-expense) !important;
 }
 
+.color-picker {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.color-picker input[type="color"] {
+  position: absolute;
+  top: -25%;
+  left: -25%;
+  width: 150%;
+  height: 150%;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+
+.color-picker__icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  color: #fff;
+  filter: drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.9));
+  pointer-events: none;
+}
+
 .password-field {
   position: relative;
 }
