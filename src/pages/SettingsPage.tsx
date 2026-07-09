@@ -1,16 +1,48 @@
-import { LogOut, Moon, Sun } from "lucide-react";
+import { useState, type FormEvent } from "react";
+import { KeyRound, LogOut, Moon, Sun } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { ACCENT_PRESETS, FONT_OPTIONS, useTheme } from "@/contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
+import { PasswordInput } from "@/components/ui/PasswordInput";
+import { useToast } from "@/components/ui/Toast";
 
 export function SettingsPage() {
   const { theme, setMode, setAccentColor, setFontFamily, setRadius } = useTheme();
-  const { user, signOut } = useAuth();
+  const { user, signOut, updatePassword } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [savingPassword, setSavingPassword] = useState(false);
 
   async function handleSignOut() {
     await signOut();
     navigate("/login", { replace: true });
+  }
+
+  async function handleChangePassword(e: FormEvent) {
+    e.preventDefault();
+    setPasswordError(null);
+    if (newPassword !== confirmPassword) {
+      setPasswordError("As senhas não coincidem.");
+      return;
+    }
+    if (newPassword.length < 6) {
+      setPasswordError("A senha precisa ter pelo menos 6 caracteres.");
+      return;
+    }
+    setSavingPassword(true);
+    const result = await updatePassword(newPassword);
+    setSavingPassword(false);
+    if (result.error) {
+      setPasswordError(result.error);
+      return;
+    }
+    setNewPassword("");
+    setConfirmPassword("");
+    toast.show("Senha alterada com sucesso.", "success");
   }
 
   return (
@@ -22,6 +54,38 @@ export function SettingsPage() {
       <div className="card">
         <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Conta</h3>
         <div className="text-muted" style={{ fontSize: 14 }}>{user?.email}</div>
+      </div>
+
+      <div className="card">
+        <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14 }}>Alterar senha</h3>
+        <form className="auth-form" onSubmit={handleChangePassword}>
+          <div className="field">
+            <label htmlFor="new-password">Nova senha</label>
+            <PasswordInput
+              id="new-password"
+              autoComplete="new-password"
+              required
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Mínimo 6 caracteres"
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="confirm-password">Confirmar nova senha</label>
+            <PasswordInput
+              id="confirm-password"
+              autoComplete="new-password"
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Repita a senha"
+            />
+          </div>
+          {passwordError && <div className="error-text">{passwordError}</div>}
+          <button className="btn btn--primary btn--block" type="submit" disabled={savingPassword}>
+            <KeyRound size={16} /> {savingPassword ? "Salvando…" : "Salvar nova senha"}
+          </button>
+        </form>
       </div>
 
       <div className="card">
