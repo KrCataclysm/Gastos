@@ -29,6 +29,7 @@ function translateError(message: string): string {
     "Email not confirmed": "Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.",
     "User already registered": "Já existe uma conta com esse e-mail.",
     "Password should be at least 6 characters": "A senha precisa ter pelo menos 6 caracteres.",
+    "Failed to fetch": "Não foi possível conectar ao servidor. Verifique sua internet e tente novamente em instantes.",
   };
   return map[message] ?? message;
 }
@@ -38,10 +39,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setLoading(false);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data }) => setSession(data.session))
+      .catch(() => setSession(null))
+      .finally(() => setLoading(false));
     const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
       setLoading(false);
