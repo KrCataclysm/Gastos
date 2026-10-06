@@ -24,6 +24,7 @@ import { InstallPrompt } from "@/components/layout/InstallPrompt";
 import { SyncBadge } from "@/components/layout/SyncBadge";
 import { useData } from "@/contexts/DataContext";
 import { Logo } from "@/components/brand/Logo";
+import { BRAND } from "@/brand";
 
 const PRIMARY_NAV: NavItem[] = [
   { to: "/", label: "Início", icon: LayoutDashboard, end: true },
@@ -48,7 +49,7 @@ export function AppShell() {
     <div className="app-shell">
       <a href="#conteudo" className="skip-link">Pular para o conteúdo</a>
       <aside className="sidebar">
-        <div className="sidebar__brand" style={{ display: "flex", alignItems: "center", gap: 10 }}><Logo size={30} />Gastos</div>
+        <div className="sidebar__brand" style={{ display: "flex", alignItems: "center", gap: 10 }}><Logo size={30} />{BRAND.name}</div>
         {[...PRIMARY_NAV, ...SECONDARY_NAV].map((item) => (
           <NavLink
             key={item.to}

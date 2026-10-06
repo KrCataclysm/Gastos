@@ -1,4 +1,6 @@
-# Gastos
+# Prumo
+
+> Suas finanças no prumo.
 
 Controle de gastos pensado para universitários: lança em segundos, enxerga para onde o dinheiro vai e aplica **ferramentas de Gestão da Qualidade** (Pareto, Ishikawa) às próprias finanças, sem planilha.
 

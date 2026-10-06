@@ -16,6 +16,7 @@ import { AccountsPage } from "@/pages/AccountsPage";
 import { BudgetPage } from "@/pages/BudgetPage";
 import { SettingsPage } from "@/pages/SettingsPage";
 import { MorePage } from "@/pages/MorePage";
+import { BRAND } from "@/brand";
 
 const DashboardPage = lazy(() => import("@/pages/DashboardPage").then((m) => ({ default: m.DashboardPage })));
 const ReportsPage = lazy(() => import("@/pages/ReportsPage").then((m) => ({ default: m.ReportsPage })));
@@ -35,7 +36,7 @@ function PageFallback() {
 function Splash() {
   return (
     <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--color-bg)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, fontWeight: 800, fontSize: 22, color: "var(--color-text)" }}><Logo size={40} />Gastos</div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, fontWeight: 800, fontSize: 22, color: "var(--color-text)" }}><Logo size={40} />{BRAND.name}</div>
     </div>
   );
 }

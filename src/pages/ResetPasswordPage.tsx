@@ -5,6 +5,7 @@ import { Logo } from "@/components/brand/Logo";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useAuth } from "@/contexts/AuthContext";
+import { BRAND } from "@/brand";
 
 export function ResetPasswordPage() {
   const { updatePassword } = useAuth();
@@ -37,7 +38,7 @@ export function ResetPasswordPage() {
       <div className="auth-card">
         <div className="auth-card__brand">
           <Logo size={36} />
-          Gastos
+          {BRAND.name}
         </div>
         <div>
           <h1>Defina uma nova senha</h1>

@@ -25,10 +25,10 @@ export default defineConfig({
       ],
       manifest: {
         id: base,
-        name: "Gastos - Controle financeiro universitário",
-        short_name: "Gastos",
+        name: "Prumo - Finanças universitárias no prumo",
+        short_name: "Prumo",
         description:
-          "Controle de receitas e despesas para universitários: orçamento, metas, Pareto e Ishikawa.",
+          "Prumo: controle de receitas e despesas para universitários, com orçamento, metas, Pareto e Ishikawa.",
         start_url: base,
         scope: base,
         display: "standalone",

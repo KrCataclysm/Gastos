@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Download, Share, X } from "lucide-react";
+import { BRAND } from "@/brand";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -48,7 +49,7 @@ export function InstallPrompt() {
         <Download size={20} />
       </div>
       <div style={{ flex: 1 }}>
-        <div style={{ fontWeight: 700, fontSize: 14 }}>Instale o Gastos no seu aparelho</div>
+        <div style={{ fontWeight: 700, fontSize: 14 }}>Instale o {BRAND.name} no seu aparelho</div>
         <div style={{ fontSize: 13, color: "var(--color-text-muted)" }}>
           {deferred
             ? "Acesso rápido, tela cheia e funciona offline."

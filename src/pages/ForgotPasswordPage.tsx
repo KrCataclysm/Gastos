@@ -4,6 +4,7 @@ import { MailCheck, SendHorizontal } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { useAuth } from "@/contexts/AuthContext";
+import { BRAND } from "@/brand";
 
 export function ForgotPasswordPage() {
   const { resetPassword } = useAuth();
@@ -27,7 +28,7 @@ export function ForgotPasswordPage() {
       <div className="auth-card">
         <div className="auth-card__brand">
           <Logo size={36} />
-          Gastos
+          {BRAND.name}
         </div>
         {sent ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" }}>

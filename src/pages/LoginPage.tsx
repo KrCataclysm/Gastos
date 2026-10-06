@@ -5,6 +5,7 @@ import { Logo } from "@/components/brand/Logo";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useAuth } from "@/contexts/AuthContext";
+import { BRAND } from "@/brand";
 
 export function LoginPage() {
   const { signIn } = useAuth();
@@ -29,7 +30,7 @@ export function LoginPage() {
       <div className="auth-card">
         <div className="auth-card__brand">
           <Logo size={36} />
-          Gastos
+          {BRAND.name}
         </div>
         <div>
           <h1>Bem-vindo de volta</h1>
