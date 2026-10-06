@@ -43,7 +43,7 @@ export function Transactions() {
 
   return (
     <div className="stack">
-      <div className="page-head"><h1>Lançamentos</h1><MonthPicker value={ym} onChange={setYm} /></div>
+      <div className="page-head"><h1>Extrato</h1><MonthPicker value={ym} onChange={setYm} /></div>
       <div className="card stack" style={{ gap: 12 }}>
         <div className="field">
           <label htmlFor="busca" className="sr-only">Buscar</label>

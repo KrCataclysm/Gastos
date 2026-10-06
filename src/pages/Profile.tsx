@@ -3,7 +3,10 @@ import { useEffect, useState, type FormEvent } from "react";
 import { z } from "zod";
 import { useAuth } from "../auth/AuthProvider";
 import { TextField } from "../components/Field";
+import { Avatar } from "../components/Avatar";
+import { PALETTE } from "../components/Pickers";
 import { useToast } from "../components/Toast";
+import { useTheme } from "../theme/ThemeProvider";
 import { Banner, CardTitle, Loading } from "../components/ui";
 import { useAccounts, useCategories, useGoals, useProfile, useRecurring, useUpdateProfile, useAllTransactions } from "../data/api";
 import { downloadText } from "../lib/csv";
@@ -16,7 +19,7 @@ const schema = z.object({ display_name: z.string().trim().min(1, "Informe seu no
 const pw = z.string().min(8, "Use ao menos 8 caracteres.").max(72);
 
 export function Profile() {
-  const { user, signOut } = useAuth(); const profile = useProfile(); const update = useUpdateProfile(); const toast = useToast();
+  const { user, signOut } = useAuth(); const { prefs, update: updatePrefs } = useTheme(); const profile = useProfile(); const update = useUpdateProfile(); const toast = useToast();
   const accounts = useAccounts(); const categories = useCategories(); const goals = useGoals(); const recurring = useRecurring(); const txs = useAllTransactions();
   const [f, setF] = useState({ display_name: "", institution: "", course: "", start: "", end: "", income: "" });
   const [errors, setErrors] = useState<Record<string, string>>({}); const [pass, setPass] = useState(""); const [passErr, setPassErr] = useState("");
@@ -41,7 +44,18 @@ export function Profile() {
 
   return (
     <div className="stack">
-      <div className="page-head"><div><h1>Perfil</h1><p className="sub">{user?.email}</p></div></div>
+      <section className="card stack">
+        <div className="hero-profile"><Avatar name={f.display_name} size={72} /><div><h1>{f.display_name || "Perfil"}</h1><p className="sub muted">{user?.email}</p></div></div>
+        <div className="field"><span className="lbl" id="emo-lbl">Emoji do avatar (opcional)</span>
+          <div className="chips" role="group" aria-labelledby="emo-lbl">
+            {["", "🎓", "📚", "☕", "🚀", "🦉", "🐱", "🌱", "💡", "⚡"].map((e) => <button key={e || "ini"} type="button" className="chip" aria-pressed={prefs.avatar.emoji === e} aria-label={e ? `Emoji ${e}` : "Usar iniciais"} onClick={() => updatePrefs((p) => ({ ...p, avatar: { ...p.avatar, emoji: e } }))}>{e || "Iniciais"}</button>)}
+          </div></div>
+        <div className="field"><span className="lbl" id="av-cor">Cor do avatar</span>
+          <div className="chips" role="group" aria-labelledby="av-cor">
+            {PALETTE.map((c) => <button key={c} type="button" className="chip" aria-pressed={prefs.avatar.color === c} aria-label={`Cor ${c}`} onClick={() => updatePrefs((p) => ({ ...p, avatar: { ...p.avatar, color: c } }))} style={{ padding: 0, width: 36, justifyContent: "center" }}><i className="dot" style={{ background: c, width: 20, height: 20 }} /></button>)}
+          </div></div>
+        <p className="muted" style={{ fontSize: ".82rem" }}>O avatar fica salvo neste aparelho.</p>
+      </section>
       <form className="card stack" onSubmit={submit} noValidate>
         <CardTitle title="Dados acadêmicos" />
         <TextField label="Nome" value={f.display_name} onChange={set("display_name")} error={errors.display_name} maxLength={80} autoComplete="name" />

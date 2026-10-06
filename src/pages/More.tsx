@@ -1,4 +1,4 @@
-import { ChevronRight, LogOut, Moon, PiggyBank, Repeat, Sun, Target, User } from "lucide-react";
+import { ChevronRight, LogOut, Moon, PiggyBank, Repeat, Settings, Sun, Target, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import { useQuickAdd } from "../components/AppShell";
@@ -8,6 +8,7 @@ const LINKS = [
   { to: "/fixas", label: "Contas fixas", desc: "Mensalidade, aluguel e assinaturas", icon: Repeat },
   { to: "/contas", label: "Contas e categorias", desc: "Organize carteiras, bancos e categorias", icon: PiggyBank },
   { to: "/perfil", label: "Perfil", desc: "Dados acadêmicos, senha e backup", icon: User },
+  { to: "/configuracoes", label: "Configurações", desc: "Temas, fonte e acessibilidade", icon: Settings },
 ];
 
 export function More() {
