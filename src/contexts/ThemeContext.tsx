@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { shade } from "@/lib/color";
 import { mix, normalizeHex, readableOn } from "@/lib/contrast";
+import { CHOICE_COLORS } from "@/lib/palette";
 import { getPreset, PRESETS, type Palette } from "@/lib/themePresets";
 
 export type ThemeMode = "dark" | "light";
@@ -21,6 +22,7 @@ export type FontChoice =
   | "fira-code"
   | "raleway"
   | "oswald"
+  | "ibm-plex-sans"
   | "atkinson-hyperlegible";
 
 export interface ThemeState {
@@ -53,12 +55,10 @@ export interface A11y {
   reduceMotion: boolean;
 }
 
-/** Índigo do app, ajustado para o texto branco do botão passar WCAG AA (4,6:1). */
-export const DEFAULT_ACCENT = "#6064f0";
-
 export const DEFAULT_A11Y: A11y = { uiScale: 1, wideSpacing: false, strongBorders: false, strongFocus: false, bigTargets: false, reduceMotion: false };
 
 const FONT_STACKS: Record<FontChoice, string> = {
+  "ibm-plex-sans": '"IBM Plex Sans", system-ui, sans-serif',
   inter: '"Inter", system-ui, sans-serif',
   roboto: '"Roboto", system-ui, sans-serif',
   poppins: '"Poppins", system-ui, sans-serif',
@@ -79,6 +79,7 @@ const FONT_STACKS: Record<FontChoice, string> = {
 };
 
 export const FONT_OPTIONS: { value: FontChoice; label: string }[] = [
+  { value: "ibm-plex-sans", label: "IBM Plex Sans (padrão)" },
   { value: "inter", label: "Inter" },
   { value: "roboto", label: "Roboto" },
   { value: "poppins", label: "Poppins" },
@@ -98,26 +99,10 @@ export const FONT_OPTIONS: { value: FontChoice; label: string }[] = [
   { value: "fira-code", label: "Fira Code" },
 ];
 
-export const ACCENT_PRESETS = [
-  "#6366f1",
-  "#4f46e5",
-  "#3b82f6",
-  "#0ea5e9",
-  "#06b6d4",
-  "#14b8a6",
-  "#10b981",
-  "#22c55e",
-  "#84cc16",
-  "#eab308",
-  "#f59e0b",
-  "#f97316",
-  "#ef4444",
-  "#ec4899",
-  "#d946ef",
-  "#8b5cf6",
-];
+export const ACCENT_PRESETS: readonly string[] = CHOICE_COLORS;
 
 interface ModeDefaults {
+  accentColor: string;
   bgColor: string;
   panelColor: string;
   panelAltColor: string;
@@ -129,26 +114,17 @@ interface ModeDefaults {
 }
 
 function modeDefaults(mode: ThemeMode): ModeDefaults {
-  const dark = mode === "dark";
-  return {
-    bgColor: dark ? "#0d1120" : "#f3f5fb",
-    panelColor: dark ? "#151b30" : "#ffffff",
-    panelAltColor: dark ? "#1b2340" : "#edf0f9",
-    borderColor: dark ? "#262f4d" : "#dde3f0",
-    fontColor: dark ? "#f1f3fb" : "#12172b",
-    mutedColor: dark ? "#93a0c2" : "#5b6684",
-    incomeColor: dark ? "#22c55e" : "#15803d",
-    expenseColor: dark ? "#f43f5e" : "#be123c",
-  };
+  const p = getPreset(mode === "dark" ? "escuro" : "claro")!.palette;
+  return { accentColor: p.accent, bgColor: p.bg, panelColor: p.panel, panelAltColor: p.panelAlt, borderColor: p.border, fontColor: p.text, mutedColor: p.muted, incomeColor: p.income, expenseColor: p.expense };
 }
 
 function buildTheme(mode: ThemeMode, accentColor: string, radius: number, fontFamily: FontChoice): ThemeState {
   return {
+    ...modeDefaults(mode),
     mode,
     fontFamily,
     accentColor,
     radius,
-    ...modeDefaults(mode),
     presetId: "custom",
     followSystem: false,
     a11y: DEFAULT_A11Y,
@@ -179,6 +155,12 @@ export function toPalette(t: ThemeState): Palette {
   return { mode: t.mode, bg: t.bgColor, panel: t.panelColor, panelAlt: t.panelAltColor, text: t.fontColor, muted: t.mutedColor, border: t.borderColor, accent: t.accentColor, income: t.incomeColor, expense: t.expenseColor };
 }
 
+/** Padrão do app: Prumo claro/noturno conforme o aparelho. */
+export function defaultTheme(): ThemeState {
+  const base = buildTheme("light", modeDefaults("light").accentColor, 10, "ibm-plex-sans");
+  return { ...base, presetId: "claro", followSystem: true };
+}
+
 const clampN = (n: unknown, min: number, max: number, d: number) => (typeof n === "number" && Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : d);
 const flag = (v: unknown) => v === true;
 const hexOr = (v: unknown, d: string) => (typeof v === "string" ? normalizeHex(v) : null) ?? d;
@@ -191,9 +173,9 @@ export function sanitizeA11y(raw: unknown): A11y {
 /** Nunca confia no que veio do localStorage ou de um tema importado. */
 export function sanitizeTheme(raw: unknown): ThemeState {
   const p = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
-  const mode: ThemeMode = p.mode === "light" ? "light" : "dark";
-  const font = FONT_OPTIONS.some((f) => f.value === p.fontFamily) ? (p.fontFamily as FontChoice) : "inter";
-  const base = buildTheme(mode, hexOr(p.accentColor, DEFAULT_ACCENT), clampN(p.radius, 4, 28, 16), font);
+  const mode: ThemeMode = p.mode === "dark" ? "dark" : "light";
+  const font = FONT_OPTIONS.some((f) => f.value === p.fontFamily) ? (p.fontFamily as FontChoice) : "ibm-plex-sans";
+  const base = buildTheme(mode, hexOr(p.accentColor, modeDefaults(mode).accentColor), clampN(p.radius, 4, 28, 10), font);
   return {
     ...base,
     bgColor: hexOr(p.bgColor, base.bgColor),
@@ -210,7 +192,7 @@ export function sanitizeTheme(raw: unknown): ThemeState {
   };
 }
 
-const STORAGE_KEY = "gastos:theme";
+const STORAGE_KEY = "gastos:theme:v2";
 
 function loadStored(): ThemeState {
   try {
@@ -219,10 +201,10 @@ function loadStored(): ThemeState {
   } catch {
     /* tema corrompido: volta ao padrão */
   }
-  return { ...buildTheme("dark", DEFAULT_ACCENT, 16, "inter"), presetId: "escuro" };
+  return defaultTheme();
 }
 
-export const CSS_CACHE_KEY = "gastos:css";
+export const CSS_CACHE_KEY = "gastos:css:v2";
 
 /** Tokens de CSS derivados do tema. Função pura, usada também pelo cache do boot (sem piscar no carregamento). */
 export function themeVars(theme: ThemeState): { vars: Record<string, string>; attrs: Record<string, string> } {
@@ -261,12 +243,27 @@ export function themeVars(theme: ThemeState): { vars: Record<string, string>; at
   return { vars, attrs };
 }
 
+const fontLoaders = import.meta.glob("/node_modules/@fontsource/*/latin-{400,600,700}.css");
+const fontLoaded = new Set<string>(["ibm-plex-sans"]);
+
+/** Baixa a fonte escolhida sob demanda (a padrão já vem no CSS inicial). */
+async function ensureFont(key: FontChoice): Promise<void> {
+  if (fontLoaded.has(key)) return;
+  fontLoaded.add(key);
+  try {
+    await Promise.all([400, 600, 700].map((w) => fontLoaders[`/node_modules/@fontsource/${key}/latin-${w}.css`]?.()));
+  } catch {
+    fontLoaded.delete(key);
+  }
+}
+
 function applyTheme(theme: ThemeState) {
   const root = document.documentElement;
   const { vars, attrs } = themeVars(theme);
   for (const [k, v] of Object.entries(vars)) root.style.setProperty(k, v);
   for (const [k, v] of Object.entries(attrs)) root.setAttribute(k, v);
   root.style.colorScheme = theme.mode;
+  void ensureFont(theme.fontFamily);
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme.panelColor);
   try {
     localStorage.setItem(CSS_CACHE_KEY, JSON.stringify({ vars, attrs, scheme: theme.mode, themeColor: theme.panelColor }));
@@ -370,7 +367,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [edit]);
   const setA11y = useCallback((patch: Partial<A11y>) => setTheme((t) => ({ ...t, a11y: sanitizeA11y({ ...t.a11y, ...patch }) })), []);
   const importTheme = useCallback((raw: unknown) => setTheme((t) => ({ ...sanitizeTheme(raw), a11y: t.a11y, fontFamily: t.fontFamily, radius: t.radius, followSystem: false })), []);
-  const resetAll = useCallback(() => setTheme({ ...buildTheme("dark", DEFAULT_ACCENT, 16, "inter"), presetId: "escuro" }), []);
+  const resetAll = useCallback(() => setTheme(defaultTheme()), []);
 
   const value = useMemo(
     () => ({ theme: effective, setMode, setAccentColor, setRadius, setFontFamily, setBgColor, setPanelColor, resetBgColor, resetPanelColor, applyPreset, setFollowSystem, setColor, setA11y, importTheme, resetAll }),

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { useLocalToolState } from "@/lib/localTool";
 import { formatDate, todayISO } from "@/lib/format";
+import { CHOICE_COLORS } from "@/lib/palette";
 
 interface GanttTask {
   id: string;
@@ -11,7 +12,7 @@ interface GanttTask {
   color: string;
 }
 
-const GANTT_COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#ec4899", "#06b6d4"];
+const GANTT_COLORS = CHOICE_COLORS;
 
 function dayDiff(a: string, b: string): number {
   return Math.round((new Date(`${b}T00:00:00`).getTime() - new Date(`${a}T00:00:00`).getTime()) / 86400000);

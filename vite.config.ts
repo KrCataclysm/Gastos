@@ -32,8 +32,8 @@ export default defineConfig({
         start_url: base,
         scope: base,
         display: "standalone",
-        background_color: "#101425",
-        theme_color: "#101425",
+        background_color: "#f3f1eb",
+        theme_color: "#0e6b62",
         lang: "pt-BR",
         orientation: "portrait",
         icons: [
@@ -45,9 +45,15 @@ export default defineConfig({
         categories: ["finance", "productivity"],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,woff2,png,svg,ico}"],
+        // Só a fonte padrão (IBM Plex) é pré-carregada para uso offline; as opcionais são cacheadas ao serem usadas.
+        globPatterns: ["**/*.{js,css,html,png,svg,ico}", "assets/ibm-plex-*.woff2"],
         navigateFallback: `${base}index.html`,
         runtimeCaching: [
+          {
+            urlPattern: ({ url }) => /\.(woff2?|ttf)$/.test(url.pathname),
+            handler: "CacheFirst",
+            options: { cacheName: "fontes", expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 365 } },
+          },
           {
             urlPattern: ({ url }) => url.pathname.includes("/rest/v1/") || url.pathname.includes("/auth/v1/"),
             handler: "NetworkOnly",
@@ -61,5 +67,17 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        // Bibliotecas em pacotes próprios: mudam pouco e ficam em cache entre versões do app.
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return undefined;
+          if (/node_modules\/(react|react-dom|react-router|react-router-dom|scheduler)\//.test(id)) return "vendor-react";
+          if (id.includes("@supabase")) return "vendor-supabase";
+          if (id.includes("date-fns")) return "vendor-date";
+          return undefined;
+        },
+      },
+    },
   },
 });

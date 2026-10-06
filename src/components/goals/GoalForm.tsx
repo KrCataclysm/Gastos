@@ -4,12 +4,13 @@ import { useData } from "@/contexts/DataContext";
 import { useToast } from "@/components/ui/Toast";
 import { ICON_CHOICES, getIcon } from "@/components/ui/icons";
 import type { Goal } from "@/types";
+import { CHOICE_COLORS } from "@/lib/palette";
 
 const GOAL_ICONS = ["piggy-bank", "flag", "rocket", "trophy", "plane-takeoff", "home", "car", "graduation-cap", "gift", "heart-pulse"].filter((i) =>
   ICON_CHOICES.includes(i),
 );
 
-const COLOR_CHOICES = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#ec4899", "#06b6d4", "#8b5cf6"];
+const COLOR_CHOICES = CHOICE_COLORS;
 
 export function GoalForm({ initial, onClose }: { initial?: Goal; onClose: () => void }) {
   const { accounts, saveGoal } = useData();

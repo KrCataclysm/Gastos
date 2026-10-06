@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Check, Copy, Pipette, RotateCcw, TriangleAlert } from "lucide-react";
 import { ACCENT_PRESETS, FONT_OPTIONS, PRESETS, toPalette, useTheme } from "@/contexts/ThemeContext";
 import { ColorInput } from "@/components/ui/ColorInput";
@@ -9,7 +10,6 @@ import { checkContrast } from "@/lib/themeChecks";
 type Tab = "aparencia" | "acessibilidade" | "sobre";
 const TABS: [Tab, string][] = [["aparencia", "Aparência"], ["acessibilidade", "Acessibilidade"], ["sobre", "Sobre"]];
 const SCALES = [0.9, 1, 1.15, 1.3];
-const H = { fontSize: 15, fontWeight: 700 } as const;
 
 function Appearance() {
   const { theme, setAccentColor, setFontFamily, setRadius, setBgColor, setPanelColor, setColor, applyPreset, setFollowSystem, importTheme, resetAll } = useTheme();
@@ -20,9 +20,9 @@ function Appearance() {
   const isCustom = !theme.followSystem && theme.presetId === "custom";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+    <div className="stack">
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 4 }}>Tema</h3>
+        <h3 className="panel-title" style={{ marginBottom: 4 }}>Tema</h3>
         <p className="text-muted" style={{ fontSize: 12.5, marginBottom: 12 }}>Aplica na hora. Fica salvo neste aparelho.</p>
         <div className="preset-grid" role="group" aria-label="Temas prontos">
           <button type="button" className="preset" aria-pressed={theme.followSystem} onClick={setFollowSystem}>
@@ -43,7 +43,7 @@ function Appearance() {
       </div>
 
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 12 }}>Cor de destaque</h3>
+        <h3 className="panel-title" style={{ marginBottom: 12 }}>Cor de destaque</h3>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
           {ACCENT_PRESETS.map((c) => (
             <button key={c} onClick={() => setAccentColor(c)} aria-pressed={theme.accentColor === c}
@@ -57,7 +57,7 @@ function Appearance() {
       </div>
 
       <details className="card">
-        <summary style={{ ...H, cursor: "pointer" }}>Cores avançadas (crie o seu tema)</summary>
+        <summary className="panel-title" style={{ cursor: "pointer", margin: 0 }}>Cores avançadas (crie o seu tema)</summary>
         <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", marginTop: 14 }}>
           <ColorInput label="Fundo" value={theme.bgColor} onChange={setBgColor} />
           <ColorInput label="Painéis" value={theme.panelColor} onChange={setPanelColor} />
@@ -87,7 +87,7 @@ function Appearance() {
       </details>
 
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 4 }}>Legibilidade do tema atual</h3>
+        <h3 className="panel-title" style={{ marginBottom: 4 }}>Legibilidade do tema atual</h3>
         <p className="text-muted" style={{ fontSize: 12.5, marginBottom: 10 }}>Critérios WCAG AA (contraste de cores).</p>
         {failing.length > 0 && (
           <div className="callout" style={{ background: "var(--color-warning-soft)", marginBottom: 10 }}>
@@ -106,7 +106,7 @@ function Appearance() {
       </div>
 
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 12 }}>Fonte e cantos</h3>
+        <h3 className="panel-title" style={{ marginBottom: 12 }}>Fonte e cantos</h3>
         <div className="field" style={{ marginBottom: 16 }}>
           <label htmlFor="font">Fonte</label>
           <select id="font" className="select" value={theme.fontFamily} onChange={(e) => setFontFamily(e.target.value as typeof theme.fontFamily)}>
@@ -131,9 +131,9 @@ function Accessibility() {
   const a = theme.a11y;
   const highContrast = theme.presetId.startsWith("contraste");
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+    <div className="stack">
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 12 }}>Tamanho da interface</h3>
+        <h3 className="panel-title" style={{ marginBottom: 12 }}>Tamanho da interface</h3>
         <div className="chips" role="group" aria-label="Tamanho da interface" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {SCALES.map((s) => (
             <button key={s} type="button" className={`chip${a.uiScale === s ? " chip--active" : ""}`} aria-pressed={a.uiScale === s} onClick={() => setA11y({ uiScale: s })}>{Math.round(s * 100)}%</button>
@@ -145,7 +145,7 @@ function Accessibility() {
       </div>
 
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 4 }}>Interface</h3>
+        <h3 className="panel-title" style={{ marginBottom: 4 }}>Interface</h3>
         <SwitchRow title="Alto contraste" description="Aplica o tema de alto contraste. Você pode trocar de tema depois." checked={highContrast} onChange={(v) => applyPreset(v ? (theme.mode === "dark" ? "contraste-escuro" : "contraste-claro") : theme.mode === "dark" ? "escuro" : "claro")} />
         <SwitchRow title="Bordas reforçadas" description="Bordas mais escuras para separar melhor painéis e campos." checked={a.strongBorders} onChange={(v) => setA11y({ strongBorders: v })} />
         <SwitchRow title="Foco reforçado" description="Contorno grosso no item selecionado ao navegar pelo teclado." checked={a.strongFocus} onChange={(v) => setA11y({ strongFocus: v })} />
@@ -154,7 +154,7 @@ function Accessibility() {
       </div>
 
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 8 }}>O que já é padrão no app</h3>
+        <h3 className="panel-title" style={{ marginBottom: 8 }}>O que já é padrão no app</h3>
         <ul className="text-muted" style={{ margin: 0, paddingLeft: 18, fontSize: 13, lineHeight: 1.6 }}>
           <li>Navegação por teclado e link “Pular para o conteúdo”.</li>
           <li>Gráficos com descrição para leitor de tela e tabela de dados.</li>
@@ -169,7 +169,7 @@ function Accessibility() {
 function About() {
   return (
     <div className="card">
-      <h3 style={{ ...H, marginBottom: 8 }}>Sobre</h3>
+      <h3 className="panel-title" style={{ marginBottom: 8 }}>Sobre</h3>
       <p style={{ fontSize: 14, lineHeight: 1.6 }}>Controle de gastos para universitários, com ferramentas de Gestão da Qualidade (Pareto, Ishikawa) aplicadas às suas finanças.</p>
       <p className="text-muted" style={{ fontSize: 13, marginTop: 8, lineHeight: 1.6 }}>Seus dados ficam na sua conta, protegidos por regras de acesso no banco: só você enxerga o que registrou. O app funciona offline e sincroniza quando a internet volta. Tema e acessibilidade ficam salvos neste aparelho.</p>
     </div>
@@ -179,8 +179,8 @@ function About() {
 export function SettingsPage() {
   const [tab, setTab] = useState<Tab>("aparencia");
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div className="topbar"><div className="topbar__title">Configurações</div></div>
+    <div className="stack">
+      <PageHeader eyebrow="Preferências" title="Configurações" />
       <div role="tablist" aria-label="Seções" style={{ display: "flex", gap: 8, overflowX: "auto" }}>
         {TABS.map(([k, l]) => (
           <button key={k} role="tab" className={`chip${tab === k ? " chip--active" : ""}`} aria-selected={tab === k} onClick={() => setTab(k)}>{l}</button>

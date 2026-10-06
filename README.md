@@ -43,6 +43,17 @@ npm run typecheck && npm test && npm run build
 
 Para regerar os ícones do PWA a partir do logo: `node design/build-icons.mjs` (requer Playwright + Chromium).
 
+## Design
+
+Identidade própria, ligada ao nome: **prumo** é a linha que mostra o que está alinhado.
+
+- **Linha de prumo (▼)**: nas réguas de orçamento e metas, marca onde você *deveria estar hoje*. Em cima dela o app diz se você está **No prumo**, em **Atenção**, **Fora do prumo** ou se **Estourou** (`src/lib/pace.ts`, testado).
+- **Cores**: papel quente, tinta esverdeada e verde-petróleo; dinheiro em verde-musgo e terracota (nunca verde/vermelho "semáforo"). Tema claro e noturno, automático pelo aparelho.
+- **Tipografia**: IBM Plex Sans; **números e rótulos técnicos em IBM Plex Mono** com algarismos tabulares, para colunas alinhadas.
+- **Sem decoração gratuita**: hierarquia por bordas finas e espaçamento, sem gradientes, brilhos ou sombras pesadas.
+- **Tokens** em `src/styles/tokens.css`; componentes de base em `src/styles/components.css` (régua, extrato, faixa de indicadores, demonstrativo). Fontes opcionais carregam só quando escolhidas.
+- Gráficos em **SVG próprio** (sem biblioteca): Pareto, Ishikawa, evolução mensal e barras por categoria.
+
 ## Segurança
 
 - **RLS em todas as tabelas**: cada linha só é visível/editável por quem tem `user_id = auth.uid()`.

@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { useNavigate } from "react-router-dom";
 import { Download, KeyRound, LogOut, Save } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,10 +11,10 @@ import { fetchAcademic, saveAcademic } from "@/lib/profile";
 import { setAvatar, useAvatar } from "@/lib/avatar";
 import { downloadText } from "@/lib/csv";
 import { todayISO } from "@/lib/format";
+import { CHOICE_COLORS } from "@/lib/palette";
 
 const EMOJIS = ["", "🎓", "📚", "☕", "🚀", "🦉", "🐱", "🌱", "💡", "⚡"];
-const COLORS = ["#6064f0", "#0ea5e9", "#14b8a6", "#22c55e", "#f59e0b", "#f97316", "#ef4444", "#ec4899", "#8b5cf6", "#64748b"];
-const H = { fontSize: 15, fontWeight: 700 } as const;
+const COLORS = CHOICE_COLORS;
 
 export function ProfilePage() {
   const { user, signOut, updatePassword, updateDisplayName } = useAuth();
@@ -114,8 +115,8 @@ export function ProfilePage() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div className="topbar"><div className="topbar__title">Perfil</div></div>
+    <div className="stack">
+      <PageHeader eyebrow="Conta" title="Perfil" />
 
       <div className="card">
         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
@@ -146,7 +147,7 @@ export function ProfilePage() {
       </div>
 
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 12 }}>Apelido</h3>
+        <h3 className="panel-title" style={{ marginBottom: 12 }}>Apelido</h3>
         <form className="auth-form" onSubmit={handleNickname}>
           <div className="field">
             <label htmlFor="nickname">Como quer ser chamado(a)?</label>
@@ -157,7 +158,7 @@ export function ProfilePage() {
       </div>
 
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 12 }}>Dados acadêmicos</h3>
+        <h3 className="panel-title" style={{ marginBottom: 12 }}>Dados acadêmicos</h3>
         {acadState === "unavailable" ? (
           <p className="text-muted" style={{ fontSize: 13 }}>Disponível quando houver conexão com o servidor.</p>
         ) : (
@@ -176,7 +177,7 @@ export function ProfilePage() {
       </div>
 
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 14 }}>Alterar senha</h3>
+        <h3 className="panel-title" style={{ marginBottom: 14 }}>Alterar senha</h3>
         <form className="auth-form" onSubmit={handlePassword}>
           <div className="field"><label htmlFor="new-password">Nova senha</label><PasswordInput id="new-password" autoComplete="new-password" required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Mínimo 8 caracteres" /></div>
           <div className="field"><label htmlFor="confirm-password">Confirmar nova senha</label><PasswordInput id="confirm-password" autoComplete="new-password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Repita a senha" /></div>
@@ -186,7 +187,7 @@ export function ProfilePage() {
       </div>
 
       <div className="card">
-        <h3 style={{ ...H, marginBottom: 8 }}>Seus dados</h3>
+        <h3 className="panel-title" style={{ marginBottom: 8 }}>Seus dados</h3>
         <p className="text-muted" style={{ fontSize: 13, marginBottom: 12 }}>Baixe uma cópia completa (JSON) de tudo que você registrou. Seus dados são privados: só você consegue acessá-los.</p>
         <button className="btn btn--secondary btn--block" onClick={exportBackup}><Download size={16} /> Exportar backup</button>
       </div>

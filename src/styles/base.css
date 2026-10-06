@@ -15,57 +15,35 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 1.5;
+  font-feature-settings: "ss01", "cv01";
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
 }
 
-h1,
-h2,
-h3,
-h4,
-p {
-  margin: 0;
-}
+h1, h2, h3, h4, p { margin: 0; }
 
-button,
-input,
-select,
-textarea {
-  font-family: inherit;
-  color: inherit;
-}
+h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+h2 { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em; }
 
-a {
-  color: inherit;
-}
+button, input, select, textarea { font-family: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+::selection { background: var(--color-accent-soft); }
 
-::selection {
-  background: var(--color-accent-soft);
-}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 8px; }
 
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
+.text-muted { color: var(--color-text-muted); }
+.text-income { color: var(--color-income); }
+.text-expense { color: var(--color-expense); }
 
-::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 8px;
-}
+/* Números sempre em fonte monoespaçada com algarismos tabulares: colunas alinhadas, leitura de "instrumento". */
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
 
-.text-muted {
-  color: var(--color-text-muted);
-}
+/* Rótulos técnicos: pequenos, em caixa-alta, espaçados (como legenda de desenho técnico). */
+.eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--color-text-muted); }
 
-.text-income {
-  color: var(--color-income);
-}
-
-.text-expense {
-  color: var(--color-expense);
-}
-
-.mono {
-  font-variant-numeric: tabular-nums;
-}
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
