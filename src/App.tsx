@@ -22,6 +22,9 @@ const DashboardPage = lazy(() => import("@/pages/DashboardPage").then((m) => ({ 
 const ReportsPage = lazy(() => import("@/pages/ReportsPage").then((m) => ({ default: m.ReportsPage })));
 const GoalsPage = lazy(() => import("@/pages/GoalsPage").then((m) => ({ default: m.GoalsPage })));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage").then((m) => ({ default: m.ProfilePage })));
+const ProjectsPage = lazy(() => import("@/pages/ProjectsPage").then((m) => ({ default: m.ProjectsPage })));
+const ProjectPage = lazy(() => import("@/pages/ProjectPage").then((m) => ({ default: m.ProjectPage })));
+const CheckupPage = lazy(() => import("@/pages/CheckupPage").then((m) => ({ default: m.CheckupPage })));
 const ToolsPage = lazy(() => import("@/pages/ToolsPage").then((m) => ({ default: m.ToolsPage })));
 
 function PageFallback() {
@@ -112,6 +115,9 @@ function Router() {
             </Suspense>
           }
         />
+        <Route path="/projetos" element={<Suspense fallback={<PageFallback />}><ProjectsPage /></Suspense>} />
+        <Route path="/projetos/:id" element={<Suspense fallback={<PageFallback />}><ProjectPage /></Suspense>} />
+        <Route path="/checkup" element={<Suspense fallback={<PageFallback />}><CheckupPage /></Suspense>} />
         <Route path="/configuracoes" element={<SettingsPage />} />
         <Route path="/mais" element={<MorePage />} />
       </Route>
