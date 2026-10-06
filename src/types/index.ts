@@ -112,6 +112,53 @@ export interface Goal extends Syncable {
   archived_at: string | null;
 }
 
+export type ProjectStage = "define" | "measure" | "analyze" | "improve" | "control" | "done";
+export type CauseGroup = "metodo" | "maquina" | "mao_de_obra" | "material" | "medida" | "meio";
+
+export interface ProjectCause {
+  id: string;
+  group: CauseGroup;
+  text: string;
+  g: number; // gravidade 1-5
+  u: number; // urgência 1-5
+  t: number; // tendência 1-5
+  root: boolean;
+}
+
+export interface ProjectAction {
+  id: string;
+  what: string;
+  why: string;
+  who: string;
+  where: string;
+  when: string | null;
+  how: string;
+  howMuch: number | null;
+  done: boolean;
+}
+
+export interface ProjectData {
+  problem: string;
+  objective: string;
+  baseline: number | null; // gasto médio mensal na categoria quando o projeto começou
+  target: number | null; // gasto mensal desejado
+  deadline: string | null;
+  benefit: string;
+  causes: ProjectCause[];
+  actions: ProjectAction[];
+  ocap: string;
+  standardized: boolean;
+  lessons: string;
+}
+
+export interface ImprovementProject extends Syncable {
+  title: string;
+  category_id: string | null;
+  stage: ProjectStage;
+  data: ProjectData;
+  archived_at: string | null;
+}
+
 export type SyncTable =
   | "accounts"
   | "categories"
@@ -119,6 +166,7 @@ export type SyncTable =
   | "transactions"
   | "budgets"
   | "goals"
+  | "improvement_projects"
   | "recurring_transactions"
   | "spending_profiles";
 

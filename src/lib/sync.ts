@@ -11,6 +11,7 @@ const SYNCABLE_TABLES: SyncTable[] = [
   "transactions",
   "budgets",
   "goals",
+  "improvement_projects",
 ];
 
 type Listener = (status: SyncStatus) => void;

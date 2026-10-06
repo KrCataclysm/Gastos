@@ -18,6 +18,7 @@ import type {
   Budget,
   Category,
   Goal,
+  ImprovementProject,
   RecurringTransaction,
   SpendingProfile,
   SyncStatus,
@@ -26,6 +27,7 @@ import type {
   Transaction,
 } from "@/types";
 import { DEFAULT_COLOR } from "@/lib/palette";
+import { emptyProjectData } from "@/lib/dmaic";
 
 function nowIso() {
   return new Date().toISOString();
@@ -43,6 +45,7 @@ interface DataContextValue {
   transactions: Transaction[];
   budgets: Budget[];
   goals: Goal[];
+  projects: ImprovementProject[];
   recurringTransactions: RecurringTransaction[];
   saveAccount: (input: Draft<Account>) => Promise<Account>;
   removeAccount: (id: string) => Promise<void>;
@@ -56,6 +59,8 @@ interface DataContextValue {
   removeBudget: (id: string) => Promise<void>;
   saveGoal: (input: Draft<Goal>) => Promise<Goal>;
   removeGoal: (id: string) => Promise<void>;
+  saveProject: (input: Draft<ImprovementProject>) => Promise<ImprovementProject>;
+  removeProject: (id: string) => Promise<void>;
   saveRecurring: (input: Draft<RecurringTransaction>) => Promise<RecurringTransaction>;
   removeRecurring: (id: string) => Promise<void>;
   syncNow: () => Promise<void>;
@@ -74,10 +79,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [projects, setProjects] = useState<ImprovementProject[]>([]);
   const [recurringTransactions, setRecurringTransactions] = useState<RecurringTransaction[]>([]);
 
   const reload = useCallback(async () => {
-    const [sp, acc, cat, tg, txRaw, bud, goalsRaw, rec] = await Promise.all([
+    const [sp, acc, cat, tg, txRaw, bud, goalsRaw, projRaw, rec] = await Promise.all([
       getAllLocal("spending_profiles"),
       getAllLocal("accounts"),
       getAllLocal("categories"),
@@ -85,6 +91,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       getAllLocal("transactions"),
       getAllLocal("budgets"),
       getAllLocal("goals"),
+      getAllLocal("improvement_projects"),
       getAllLocal("recurring_transactions"),
     ]);
     const tagMap = syncEngine.tagMapCache;
@@ -100,6 +107,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     );
     setBudgets(bud.filter((b) => !b.deleted_at));
     setGoals(goalsRaw.filter((g) => !g.deleted_at).sort((a, b) => a.name.localeCompare(b.name)));
+    setProjects(projRaw.filter((p) => !p.deleted_at).sort((a, b) => b.updated_at.localeCompare(a.updated_at)));
     setRecurringTransactions(rec.filter((r) => !r.deleted_at));
   }, []);
 
@@ -377,6 +385,42 @@ export function DataProvider({ children }: { children: ReactNode }) {
     [goals],
   );
 
+  const saveProject = useCallback(
+    async (input: Draft<ImprovementProject>) => {
+      if (!user || !spendingProfile) throw new Error("Sessão não carregada ainda.");
+      const id = input.id ?? newId();
+      const existing = projects.find((p) => p.id === id);
+      const record: ImprovementProject = {
+        id,
+        user_id: user.id,
+        profile_id: spendingProfile.id,
+        title: input.title ?? existing?.title ?? "Projeto",
+        category_id: input.category_id !== undefined ? input.category_id : existing?.category_id ?? null,
+        stage: input.stage ?? existing?.stage ?? "define",
+        data: input.data ?? existing?.data ?? emptyProjectData(),
+        archived_at: input.archived_at !== undefined ? input.archived_at : existing?.archived_at ?? null,
+        deleted_at: null,
+        created_at: existing?.created_at ?? nowIso(),
+        updated_at: nowIso(),
+      };
+      await persist("improvement_projects", record);
+      setProjects((prev) => [record, ...prev.filter((p) => p.id !== id)]);
+      return record;
+    },
+    [user, spendingProfile, projects],
+  );
+
+  const removeProject = useCallback(
+    async (id: string) => {
+      const existing = projects.find((p) => p.id === id);
+      if (!existing) return;
+      const record = { ...existing, deleted_at: nowIso(), updated_at: nowIso() };
+      await persist("improvement_projects", record);
+      setProjects((prev) => prev.filter((p) => p.id !== id));
+    },
+    [projects],
+  );
+
   const saveRecurring = useCallback(
     async (input: Draft<RecurringTransaction>) => {
       if (!user || !spendingProfile) throw new Error("Sessão não carregada ainda.");
@@ -467,6 +511,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     transactions,
     budgets,
     goals,
+    projects,
     recurringTransactions,
     saveAccount,
     removeAccount,
@@ -480,6 +525,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     removeBudget,
     saveGoal,
     removeGoal,
+    saveProject,
+    removeProject,
     saveRecurring,
     removeRecurring,
     syncNow,

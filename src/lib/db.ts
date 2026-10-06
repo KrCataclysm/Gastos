@@ -4,6 +4,7 @@ import type {
   Budget,
   Category,
   Goal,
+  ImprovementProject,
   QueuedMutation,
   RecurringTransaction,
   SpendingProfile,
@@ -22,6 +23,7 @@ interface GastosDB extends DBSchema {
   };
   budgets: { key: string; value: Budget; indexes: { updated_at: string } };
   goals: { key: string; value: Goal; indexes: { updated_at: string } };
+  improvement_projects: { key: string; value: ImprovementProject; indexes: { updated_at: string } };
   recurring_transactions: {
     key: string;
     value: RecurringTransaction;
@@ -36,7 +38,7 @@ let dbPromise: Promise<IDBPDatabase<GastosDB>> | null = null;
 
 export function getDb() {
   if (!dbPromise) {
-    dbPromise = openDB<GastosDB>("gastos-db", 2, {
+    dbPromise = openDB<GastosDB>("gastos-db", 3, {
       upgrade(db, oldVersion) {
         if (oldVersion < 1) {
           const accounts = db.createObjectStore("accounts", { keyPath: "id" });
@@ -67,6 +69,10 @@ export function getDb() {
           const goals = db.createObjectStore("goals", { keyPath: "id" });
           goals.createIndex("updated_at", "updated_at");
         }
+        if (oldVersion < 3) {
+          const projects = db.createObjectStore("improvement_projects", { keyPath: "id" });
+          projects.createIndex("updated_at", "updated_at");
+        }
       },
     });
   }
@@ -80,7 +86,7 @@ export async function getAllLocal<T extends keyof GastosDB>(
   return db.getAll(store as never);
 }
 
-export async function putLocal<T extends "accounts" | "categories" | "tags" | "transactions" | "budgets" | "goals" | "recurring_transactions" | "spending_profiles">(
+export async function putLocal<T extends "accounts" | "categories" | "tags" | "transactions" | "budgets" | "goals" | "improvement_projects" | "recurring_transactions" | "spending_profiles">(
   store: T,
   value: GastosDB[T]["value"],
 ): Promise<void> {
@@ -108,6 +114,7 @@ export async function clearAllLocal(): Promise<void> {
       "transactions",
       "budgets",
       "goals",
+      "improvement_projects",
       "recurring_transactions",
       "spending_profiles",
       "mutation_queue",
