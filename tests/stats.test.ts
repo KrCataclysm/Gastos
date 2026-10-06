@@ -34,3 +34,23 @@ describe("stats", () => {
     expect(histogram([])).toEqual([]);
   });
 });
+
+import { correlation } from "@/lib/stats";
+
+describe("correlation", () => {
+  it("r = 1 em reta perfeita e devolve a equação", () => {
+    const c = correlation([1, 2, 3, 4, 5], [3, 5, 7, 9, 11])!;
+    expect(c.r).toBeCloseTo(1, 10);
+    expect(c.slope).toBeCloseTo(2, 10);
+    expect(c.intercept).toBeCloseTo(1, 10);
+    expect(c.strength).toBe("forte");
+  });
+  it("r negativo e fraca/nenhuma", () => {
+    expect(correlation([1, 2, 3, 4, 5], [10, 8, 6, 4, 2])!.r).toBeCloseTo(-1, 10);
+    expect(correlation([1, 2, 3, 4, 5, 6], [5, 1, 4, 2, 6, 3])!.strength).toBe("nenhuma");
+  });
+  it("indefinido sem variação ou poucos pontos", () => {
+    expect(correlation([1, 1, 1, 1, 1], [1, 2, 3, 4, 5])).toBeNull();
+    expect(correlation([1, 2, 3], [1, 2, 3])).toBeNull();
+  });
+});

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronRight, FolderKanban, Flag, Landmark, LogOut, Settings, Tags, UserRound, Wrench, type LucideIcon } from "lucide-react";
+import { ChevronRight, BookOpen, FolderKanban, Flag, Landmark, LogOut, Settings, Tags, UserRound, Wrench, type LucideIcon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { SyncBadge } from "@/components/layout/SyncBadge";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -8,6 +8,7 @@ const GROUPS: { label: string; items: { to: string; label: string; hint: string;
   { label: "Objetivos e análise", items: [
     { to: "/metas", label: "Metas", hint: "Quanto guardar e se você está no prumo do prazo", icon: Flag },
     { to: "/projetos", label: "Projetos de melhoria", hint: "DMAIC guiado e check-up 5S das suas finanças", icon: FolderKanban },
+    { to: "/aprender", label: "Aprender", hint: "Cada ferramenta da disciplina, com exemplo de dinheiro", icon: BookOpen },
     { to: "/ferramentas", label: "Ferramentas", hint: "Pareto, Ishikawa, PDCA, 5S, Gantt e mais", icon: Wrench },
   ] },
   { label: "Organização", items: [

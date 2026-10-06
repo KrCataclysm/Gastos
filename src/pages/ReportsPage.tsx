@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useData } from "@/contexts/DataContext";
 import { MonthlyBars } from "@/components/charts/MonthlyBars";
 import { CategoryBars } from "@/components/charts/CategoryBars";
+import { ScatterTool } from "@/components/reports/ScatterTool";
 import { QualityTools } from "@/components/reports/QualityTools";
 import { MonthNav } from "@/components/ui/MonthNav";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -110,6 +111,7 @@ export function ReportsPage() {
       </div>
 
       <QualityTools transactions={transactions} categories={categories} start={start} end={end} label={monthLabel(year, month)} />
+      <ScatterTool transactions={transactions} categories={categories} />
     </div>
   );
 }

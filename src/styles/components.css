@@ -235,3 +235,20 @@ button.ledger__row:hover { background: var(--color-panel-alt); }
 /* Ishikawa: foco numa espinha ao passar o mouse ou navegar por teclado */
 .ish .ish-bone { outline: none; transition: opacity 0.2s ease; cursor: default; }
 .ish:has(.ish-bone:hover) .ish-bone:not(:hover), .ish:has(.ish-bone:focus-visible) .ish-bone:not(:focus-visible) { opacity: 0.28; }
+
+/* ---------- Leitura do mês ---------- */
+.insights { display: flex; flex-direction: column; gap: 10px; }
+.insights__grid { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 760px) { .insights__grid { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); } }
+.insight { position: relative; padding: 14px 16px 14px 18px; background: var(--color-panel); border: 1px solid var(--color-border); border-radius: var(--color-radius); overflow: hidden; }
+.insight::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--color-text-muted); }
+.insight--warn::before { background: var(--color-warning); }
+.insight--good::before { background: var(--color-income); }
+.insight h3 { font-size: 0.95rem; font-weight: 600; margin: 0 0 4px; }
+.insight p { font-size: 0.84rem; line-height: 1.5; color: var(--color-text-muted); }
+
+/* ---------- Aprender ---------- */
+.learn__toggle { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 4px 0; background: none; border: 0; color: var(--color-accent-strong); font-size: 0.84rem; font-weight: 600; cursor: pointer; }
+.learn__toggle:hover { text-decoration: underline; }
+.learn__body { border-top: 1px solid var(--color-border); margin-top: 10px; }
+.learn__body:not([hidden]) { animation: rise 0.3s ease both; }

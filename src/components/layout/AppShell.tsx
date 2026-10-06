@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { BarChart3, Flag, FolderKanban, Landmark, LayoutDashboard, MoreHorizontal, Receipt, Settings, Tags, Target, UserRound, Wrench, type LucideIcon } from "lucide-react";
+import { BarChart3, BookOpen, Flag, FolderKanban, Landmark, LayoutDashboard, MoreHorizontal, Receipt, Settings, Tags, Target, UserRound, Wrench, type LucideIcon } from "lucide-react";
 import { BRAND } from "@/brand";
 import { Logo } from "@/components/brand/Logo";
 import { InstallPrompt } from "@/components/layout/InstallPrompt";
@@ -21,6 +21,7 @@ const ORCAMENTO: NavItem = { to: "/orcamento", label: "Orçamento", icon: Target
 const METAS: NavItem = { to: "/metas", label: "Metas", icon: Flag };
 const RELATORIOS: NavItem = { to: "/relatorios", label: "Relatórios", icon: BarChart3 };
 const PROJETOS: NavItem = { to: "/projetos", label: "Projetos", icon: FolderKanban };
+const APRENDER: NavItem = { to: "/aprender", label: "Aprender", icon: BookOpen };
 const FERRAMENTAS: NavItem = { to: "/ferramentas", label: "Ferramentas", icon: Wrench };
 const CATEGORIAS: NavItem = { to: "/categorias", label: "Categorias", icon: Tags };
 const CONTAS: NavItem = { to: "/contas", label: "Contas", icon: Landmark };
@@ -29,7 +30,7 @@ const CONFIG: NavItem = { to: "/configuracoes", label: "Configurações", icon: 
 
 const GROUPS: { label: string; items: NavItem[] }[] = [
   { label: "Acompanhar", items: [HOME, EXTRATO, ORCAMENTO, METAS, RELATORIOS] },
-  { label: "Organizar", items: [CATEGORIAS, CONTAS, PROJETOS, FERRAMENTAS] },
+  { label: "Organizar", items: [CATEGORIAS, CONTAS, PROJETOS, FERRAMENTAS, APRENDER] },
   { label: "Conta", items: [PERFIL, CONFIG] },
 ];
 
