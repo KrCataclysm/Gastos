@@ -25,6 +25,7 @@ const ProfilePage = lazy(() => import("@/pages/ProfilePage").then((m) => ({ defa
 const ProjectsPage = lazy(() => import("@/pages/ProjectsPage").then((m) => ({ default: m.ProjectsPage })));
 const ProjectPage = lazy(() => import("@/pages/ProjectPage").then((m) => ({ default: m.ProjectPage })));
 const CheckupPage = lazy(() => import("@/pages/CheckupPage").then((m) => ({ default: m.CheckupPage })));
+const LearnPage = lazy(() => import("@/pages/LearnPage").then((m) => ({ default: m.LearnPage })));
 const ToolsPage = lazy(() => import("@/pages/ToolsPage").then((m) => ({ default: m.ToolsPage })));
 
 function PageFallback() {
@@ -118,6 +119,7 @@ function Router() {
         <Route path="/projetos" element={<Suspense fallback={<PageFallback />}><ProjectsPage /></Suspense>} />
         <Route path="/projetos/:id" element={<Suspense fallback={<PageFallback />}><ProjectPage /></Suspense>} />
         <Route path="/checkup" element={<Suspense fallback={<PageFallback />}><CheckupPage /></Suspense>} />
+        <Route path="/aprender" element={<Suspense fallback={<PageFallback />}><LearnPage /></Suspense>} />
         <Route path="/configuracoes" element={<SettingsPage />} />
         <Route path="/mais" element={<MorePage />} />
       </Route>

@@ -12,6 +12,7 @@ import { AddFab } from "@/components/ui/AddFab";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Ruler } from "@/components/ui/Ruler";
+import { monthInsights } from "@/lib/insights";
 import { accountBalance, budgetConsumption, lastNMonthsSeries, monthEndProjection, monthsSinceRegistration, monthTotals, savingsRate, totalNetWorth } from "@/lib/calc";
 import { firstTwoNames, formatCurrency, formatPercent, greeting, monthLabel, monthShortLabel } from "@/lib/format";
 import { budgetPace, monthFraction, PACE_LABEL, PACE_TONE } from "@/lib/pace";
@@ -42,6 +43,7 @@ export function DashboardPage() {
   const projection = useMemo(() => monthEndProjection(transactions, categories, recurringTransactions, now), [transactions, categories, recurringTransactions]);
   const series = useMemo(() => lastNMonthsSeries(transactions, seriesMonths, now), [transactions, seriesMonths]);
   const lines = useMemo(() => budgetConsumption(transactions, categories, budgets, year, month).filter((l) => l.budgeted > 0).sort((a, b) => b.pct - a.pct), [transactions, categories, budgets]);
+  const insights = useMemo(() => monthInsights(transactions, categories, now), [transactions, categories]);
   const recent = useMemo(() => transactions.slice(0, 6), [transactions]);
 
   const fraction = monthFraction(year, month, now);
@@ -90,6 +92,20 @@ export function DashboardPage() {
           <div className="kpi__sub">do que entrou no mês</div>
         </div>
       </section>
+
+      {insights.length > 0 && (
+        <section className="insights" aria-label="Leitura do mês">
+          <div className="eyebrow">Leitura do mês</div>
+          <div className="insights__grid">
+            {insights.map((i, n) => (
+              <article key={i.id} className={`insight insight--${i.tone}`} style={{ ["--i" as string]: n }}>
+                <h3>{i.title}</h3>
+                <p>{i.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="grid grid--7-5">
         <section className="card" aria-label="Ritmo do orçamento">

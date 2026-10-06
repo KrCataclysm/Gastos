@@ -48,7 +48,7 @@ export function IshikawaDiagram({ bones, effectTotal, effectTitle }: { bones: Bo
   };
 
   return (
-    <svg className="chart ish" viewBox={`0 0 ${W + PAD} ${H}`} role="img" aria-label={`Diagrama de Ishikawa: ${effectTitle}, ${formatBRL(effectTotal)}, com ${bones.length} grupos de causa`} style={{ minWidth: 940 }}>
+    <svg className="chart ish" viewBox={`0 0 ${W + PAD} ${H}`} role="img" aria-label={`Diagrama de Ishikawa: ${effectTitle}, ${formatBRL(effectTotal)}, com ${bones.length} grupos de causa`} style={{ minWidth: 860 }}>
       <defs>
         <marker id="ish-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
           <path d="M0,0 L10,5 L0,10 z" style={{ fill: "var(--color-text)" }} />

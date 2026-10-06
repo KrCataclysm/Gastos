@@ -69,3 +69,33 @@ export function histogram(values: readonly number[], bins = sturges(values.lengt
   for (const v of values) out[Math.min(bins - 1, Math.floor((v - min) / width))].count += 1;
   return out;
 }
+
+export interface Correlation {
+  r: number;
+  slope: number;
+  intercept: number;
+  n: number;
+  strength: "nenhuma" | "fraca" | "moderada" | "forte";
+}
+
+/**
+ * Coeficiente de correlação de Pearson e reta de mínimos quadrados (y = a·x + b).
+ * Retorna null com menos de 5 pontos ou sem variação em x ou y (r indefinido).
+ */
+export function correlation(xs: readonly number[], ys: readonly number[]): Correlation | null {
+  const n = Math.min(xs.length, ys.length);
+  if (n < 5) return null;
+  const mx = mean(xs.slice(0, n));
+  const my = mean(ys.slice(0, n));
+  let sxx = 0, syy = 0, sxy = 0;
+  for (let i = 0; i < n; i++) {
+    sxx += (xs[i] - mx) ** 2;
+    syy += (ys[i] - my) ** 2;
+    sxy += (xs[i] - mx) * (ys[i] - my);
+  }
+  if (sxx === 0 || syy === 0) return null;
+  const r = sxy / Math.sqrt(sxx * syy);
+  const slope = sxy / sxx;
+  const a = Math.abs(r);
+  return { r, slope, intercept: my - slope * mx, n, strength: a < 0.3 ? "nenhuma" : a < 0.5 ? "fraca" : a < 0.7 ? "moderada" : "forte" };
+}

@@ -65,3 +65,7 @@
   .auth-card > :nth-child(3) { animation-delay: 0.22s; }
   .auth-card > :nth-child(n + 4) { animation-delay: 0.3s; }
 }
+@media (prefers-reduced-motion: no-preference) {
+  .insight { animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 90ms + 200ms); }
+  .insight::before { transform-origin: top; animation: nav-bar-v 0.6s ease both; animation-delay: calc(var(--i, 0) * 90ms + 350ms); }
+}
