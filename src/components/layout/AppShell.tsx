@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { BarChart3, BookOpen, Flag, FolderKanban, Landmark, LayoutDashboard, MoreHorizontal, Receipt, Settings, Tags, Target, UserRound, Wrench, type LucideIcon } from "lucide-react";
 import { BRAND } from "@/brand";
 import { Logo } from "@/components/brand/Logo";
@@ -39,6 +39,7 @@ const BOTTOM: NavItem[] = [HOME, EXTRATO, ORCAMENTO, RELATORIOS];
 const linkClass = ({ isActive }: { isActive: boolean }) => `nav-item${isActive ? " active" : ""}`;
 
 export function AppShell() {
+  const location = useLocation();
   const { loading } = useData();
   const { user } = useAuth();
   const name = (user?.user_metadata?.display_name as string | undefined) ?? user?.email?.split("@")[0] ?? "";
@@ -77,7 +78,9 @@ export function AppShell() {
             <div className="skeleton" style={{ height: 160 }} />
           </div>
         ) : (
-          <Outlet />
+          <div className="page-enter" key={location.pathname}>
+            <Outlet />
+          </div>
         )}
       </main>
 

@@ -22,6 +22,7 @@ export type FontChoice =
   | "fira-code"
   | "raleway"
   | "oswald"
+  | "plus-jakarta-sans"
   | "ibm-plex-sans"
   | "atkinson-hyperlegible";
 
@@ -58,6 +59,7 @@ export interface A11y {
 export const DEFAULT_A11Y: A11y = { uiScale: 1, wideSpacing: false, strongBorders: false, strongFocus: false, bigTargets: false, reduceMotion: false };
 
 const FONT_STACKS: Record<FontChoice, string> = {
+  "plus-jakarta-sans": '"Plus Jakarta Sans", system-ui, sans-serif',
   "ibm-plex-sans": '"IBM Plex Sans", system-ui, sans-serif',
   inter: '"Inter", system-ui, sans-serif',
   roboto: '"Roboto", system-ui, sans-serif',
@@ -79,7 +81,7 @@ const FONT_STACKS: Record<FontChoice, string> = {
 };
 
 export const FONT_OPTIONS: { value: FontChoice; label: string }[] = [
-  { value: "ibm-plex-sans", label: "IBM Plex Sans (padrão)" },
+  { value: "plus-jakarta-sans", label: "Plus Jakarta Sans (padrão)" },
   { value: "inter", label: "Inter" },
   { value: "roboto", label: "Roboto" },
   { value: "poppins", label: "Poppins" },
@@ -157,7 +159,7 @@ export function toPalette(t: ThemeState): Palette {
 
 /** Padrão do app: Prumo claro/noturno conforme o aparelho. */
 export function defaultTheme(): ThemeState {
-  const base = buildTheme("light", modeDefaults("light").accentColor, 10, "ibm-plex-sans");
+  const base = buildTheme("light", modeDefaults("light").accentColor, 14, "plus-jakarta-sans");
   return { ...base, presetId: "claro", followSystem: true };
 }
 
@@ -174,7 +176,8 @@ export function sanitizeA11y(raw: unknown): A11y {
 export function sanitizeTheme(raw: unknown): ThemeState {
   const p = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   const mode: ThemeMode = p.mode === "dark" ? "dark" : "light";
-  const font = FONT_OPTIONS.some((f) => f.value === p.fontFamily) ? (p.fontFamily as FontChoice) : "ibm-plex-sans";
+  // "ibm-plex-sans" era o padrão anterior: quem nunca escolheu fonte passa a ver o novo padrão.
+  const font = FONT_OPTIONS.some((f) => f.value === p.fontFamily) ? (p.fontFamily as FontChoice) : "plus-jakarta-sans";
   const base = buildTheme(mode, hexOr(p.accentColor, modeDefaults(mode).accentColor), clampN(p.radius, 4, 28, 10), font);
   return {
     ...base,
@@ -244,7 +247,7 @@ export function themeVars(theme: ThemeState): { vars: Record<string, string>; at
 }
 
 const fontLoaders = import.meta.glob("/node_modules/@fontsource/*/latin-{400,600,700}.css");
-const fontLoaded = new Set<string>(["ibm-plex-sans"]);
+const fontLoaded = new Set<string>(["plus-jakarta-sans"]);
 
 /** Baixa a fonte escolhida sob demanda (a padrão já vem no CSS inicial). */
 async function ensureFont(key: FontChoice): Promise<void> {

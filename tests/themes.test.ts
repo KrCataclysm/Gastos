@@ -30,7 +30,7 @@ describe("sanitizeTheme (não confia em localStorage nem em tema importado)", ()
   it("descarta valores inválidos e limita faixas", () => {
     const t = sanitizeTheme({ mode: "x", fontFamily: "comic", accentColor: "red", radius: 999, presetId: "<script>", a11y: { uiScale: 9, wideSpacing: "sim" } });
     expect(t.mode).toBe("light");
-    expect(t.fontFamily).toBe("ibm-plex-sans");
+    expect(t.fontFamily).toBe("plus-jakarta-sans");
     expect(t.accentColor).toBe("#0e6b62");
     expect(t.radius).toBe(28);
     expect(t.presetId).toBe("custom");
