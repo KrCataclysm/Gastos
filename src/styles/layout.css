@@ -19,10 +19,11 @@
 }
 
 /* ---------- Cabeçalho de página ---------- */
-.topbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+.topbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px 16px; padding-bottom: 20px; margin-bottom: 4px; border-bottom: 1px solid var(--color-border); flex-wrap: wrap; }
 .topbar__eyebrow { margin-bottom: 6px; }
-.topbar__title { font-size: 1.7rem; font-weight: 600; letter-spacing: -0.025em; line-height: 1.15; }
-.topbar__actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.topbar__title { font-size: clamp(1.55rem, 1.4vw + 1.1rem, 2.1rem); font-weight: 600; letter-spacing: -0.025em; line-height: 1.15; }
+.topbar__actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 640px) { .topbar__actions { width: 100%; } .topbar__actions .btn__label { display: none; } .topbar__actions .btn:has(.btn__label) { width: 40px; padding: 0; } }
 
 /* ---------- Navegação: barra lateral ---------- */
 .sidebar { display: none; }

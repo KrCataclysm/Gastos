@@ -7,6 +7,7 @@ import { SyncBadge } from "@/components/layout/SyncBadge";
 import { TransactionForm } from "@/components/transactions/TransactionForm";
 import { Ledger } from "@/components/transactions/Ledger";
 import { MonthlyBars } from "@/components/charts/MonthlyBars";
+import { CountUp } from "@/components/ui/CountUp";
 import { AddFab } from "@/components/ui/AddFab";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -70,22 +71,22 @@ export function DashboardPage() {
       <section className="kpi-strip" aria-label="Resumo do mês">
         <div className="kpi">
           <div className="eyebrow">Patrimônio</div>
-          <div className="kpi__value">{formatCurrency(netWorth)}</div>
+          <div className="kpi__value"><CountUp value={netWorth} format={formatCurrency} /></div>
           <div className="kpi__sub">{accounts.length} {accounts.length === 1 ? "conta" : "contas"}</div>
         </div>
         <div className="kpi">
           <div className="eyebrow">Receitas do mês</div>
-          <div className="kpi__value text-income">{formatCurrency(cur.income)}</div>
+          <div className="kpi__value text-income"><CountUp value={cur.income} format={formatCurrency} /></div>
           <div className="kpi__sub">{dIncome ? `${dIncome} vs ${prevLabel}` : "sem mês anterior"}</div>
         </div>
         <div className="kpi">
           <div className="eyebrow">Despesas do mês</div>
-          <div className="kpi__value text-expense">{formatCurrency(cur.expense)}</div>
+          <div className="kpi__value text-expense"><CountUp value={cur.expense} format={formatCurrency} /></div>
           <div className="kpi__sub">{dExpense ? `${dExpense} vs ${prevLabel}` : "sem mês anterior"}</div>
         </div>
         <div className="kpi">
           <div className="eyebrow">Poupança</div>
-          <div className="kpi__value" style={{ color: savings >= 0 ? "var(--color-income)" : "var(--color-expense)" }}>{formatPercent(savings, 1)}</div>
+          <div className="kpi__value" style={{ color: savings >= 0 ? "var(--color-income)" : "var(--color-expense)" }}><CountUp value={savings} format={(n) => formatPercent(n, 1)} /></div>
           <div className="kpi__sub">do que entrou no mês</div>
         </div>
       </section>

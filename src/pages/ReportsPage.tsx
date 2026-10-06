@@ -65,9 +65,9 @@ export function ReportsPage() {
     <div className="stack">
       <PageHeader eyebrow="Relatórios" title={monthLabel(year, month)}>
         <MonthNav cursor={cursor} onChange={setCursor} />
-        <button className="btn btn--secondary btn--sm" onClick={exportMonth}><Download size={14} /> CSV</button>
-        <button className="btn btn--secondary btn--sm" onClick={() => downloadCsv("prumo-completo.csv", transactionsToCsv(transactions, accounts, categories))}><Download size={14} /> Tudo</button>
-        <button className="btn btn--secondary btn--sm" onClick={() => window.print()}><Printer size={14} /> PDF</button>
+        <button className="btn btn--secondary btn--sm" onClick={exportMonth} aria-label="Exportar mês em CSV"><Download size={14} /> <span className="btn__label">CSV</span></button>
+        <button className="btn btn--secondary btn--sm" onClick={() => downloadCsv("prumo-completo.csv", transactionsToCsv(transactions, accounts, categories))} aria-label="Exportar tudo em CSV"><Download size={14} /> <span className="btn__label">Tudo</span></button>
+        <button className="btn btn--secondary btn--sm" onClick={() => window.print()} aria-label="Imprimir ou salvar em PDF"><Printer size={14} /> <span className="btn__label">PDF</span></button>
       </PageHeader>
 
       <div className="grid grid--7-5">

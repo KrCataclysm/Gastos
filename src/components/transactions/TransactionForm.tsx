@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { pokaYoke, type PokaWarning } from "@/lib/poka";
 import { Sheet } from "@/components/ui/Sheet";
 import { useData } from "@/contexts/DataContext";
 import { useToast } from "@/components/ui/Toast";
@@ -14,7 +15,7 @@ export function TransactionForm({
   defaultType?: TransactionType;
   onClose: () => void;
 }) {
-  const { accounts, categories, tags, saveTransaction, saveTag, removeTransaction } = useData();
+  const { accounts, categories, tags, transactions, saveTransaction, saveTag, removeTransaction } = useData();
   const { show } = useToast();
   const [type, setType] = useState<TransactionType>(initial?.type ?? defaultType ?? "expense");
   const [amount, setAmount] = useState(initial ? String(initial.amount) : "");
@@ -29,6 +30,8 @@ export function TransactionForm({
   const [newTag, setNewTag] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [warnings, setWarnings] = useState<PokaWarning[]>([]);
+  const [confirmed, setConfirmed] = useState(false);
 
   const categoryOptions = categories.filter((c) => c.kind === type && !c.parent_id);
   const subcategoriesOf = (parentId: string) => categories.filter((c) => c.parent_id === parentId);
@@ -47,6 +50,14 @@ export function TransactionForm({
     if (type === "transfer" && (!transferAccountId || transferAccountId === accountId)) {
       setError("Escolha uma conta de destino diferente da origem.");
       return;
+    }
+    if (!confirmed) {
+      const found = pokaYoke({ id: initial?.id, type, amount: parsedAmount, description, date, category_id: categoryId || null }, transactions);
+      if (found.length > 0) {
+        setWarnings(found);
+        setConfirmed(true);
+        return;
+      }
     }
     setSaving(true);
     try {
@@ -219,8 +230,14 @@ export function TransactionForm({
         </div>
 
         {error && <div className="error-text">{error}</div>}
+        {warnings.length > 0 && (
+          <div className="callout" role="alert" style={{ borderLeftColor: "var(--color-warning)", flexDirection: "column", gap: 4 }}>
+            <b>Confira antes de salvar</b>
+            {warnings.map((w) => <span key={w.kind}>{w.message}</span>)}
+          </div>
+        )}
         <button className="btn btn--primary btn--block" onClick={handleSubmit} disabled={saving}>
-          {saving ? "Salvando…" : "Salvar lançamento"}
+          {saving ? "Salvando…" : warnings.length > 0 ? "Salvar mesmo assim" : "Salvar lançamento"}
         </button>
         {initial && (
           <button type="button" className="btn btn--danger btn--block" onClick={handleDelete}>

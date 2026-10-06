@@ -26,8 +26,8 @@ export function MonthlyBars({ data }: { data: MonthSeriesPoint[] }) {
         const cx = M.left + slot * i + slot / 2;
         return (
           <g key={`${p.year}-${p.month}`}>
-            <rect x={cx - bw - 2} y={y(p.income)} width={bw} height={Math.max(1, M.top + ph - y(p.income))} rx={1.5} style={{ fill: "var(--color-accent)" }}><title>{`Receitas: ${formatCurrency(p.income)}`}</title></rect>
-            <rect x={cx + 2} y={y(p.expense)} width={bw} height={Math.max(1, M.top + ph - y(p.expense))} rx={1.5} style={{ fill: "var(--color-expense)" }}><title>{`Despesas: ${formatCurrency(p.expense)}`}</title></rect>
+            <rect className="bar" style={{ fill: "var(--color-accent)", ["--i" as string]: i }} x={cx - bw - 2} y={y(p.income)} width={bw} height={Math.max(1, M.top + ph - y(p.income))} rx={1.5}><title>{`Receitas: ${formatCurrency(p.income)}`}</title></rect>
+            <rect className="bar" style={{ fill: "var(--color-expense)", ["--i" as string]: i + 0.5 }} x={cx + 2} y={y(p.expense)} width={bw} height={Math.max(1, M.top + ph - y(p.expense))} rx={1.5}><title>{`Despesas: ${formatCurrency(p.expense)}`}</title></rect>
             <text className="axis" x={cx} y={H - 10} textAnchor="middle">{monthShortLabel(p.year, p.month).toUpperCase()}</text>
           </g>
         );

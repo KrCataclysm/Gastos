@@ -1,0 +1,67 @@
+/*
+ * Movimento do Prumo. Tudo aqui só roda com "prefers-reduced-motion: no-preference";
+ * a opção "menos animação" das Configurações zera as durações (accessibility.css).
+ * Princípio: o movimento mostra dado (régua enchendo, barra crescendo, linha sendo traçada), não enfeita.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  /* Régua enche da esquerda e o prumo balança até assentar, como um fio de prumo de verdade. */
+  .ruler__fill { transform-origin: left center; animation: ruler-grow 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .ruler__plumb { transform-origin: 50% 0; animation: plumb-swing 1.6s ease-out 0.5s both; }
+  .ruler__plumb::before, .ruler__plumb::after { animation: fade-in 0.3s ease 0.45s both; }
+
+  /* Gráficos */
+  .chart .bar { transform-box: fill-box; transform-origin: 50% 100%; animation: bar-grow 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 70ms + 120ms); }
+  .chart .draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: calc(var(--i, 0) * 90ms + 150ms); }
+  .chart .pop { transform-box: fill-box; transform-origin: 50% 50%; animation: pop 0.4s cubic-bezier(0.3, 1.5, 0.5, 1) both; animation-delay: calc(var(--i, 0) * 70ms + 700ms); }
+  .chart .fade { animation: fade-in 0.5s ease both; animation-delay: calc(var(--i, 0) * 80ms + 300ms); }
+  .chart .zoom-in { transform-box: fill-box; transform-origin: 50% 50%; animation: zoom-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: 0.15s; }
+
+  /* Barras ranqueadas */
+  .rank__bar > span { transform-origin: left; animation: ruler-grow 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 60ms + 100ms); }
+
+  /* Listas entram em cascata */
+  .ledger__row, .senso, .menu-row, .stagger > * { animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 35ms); }
+
+  /* Interações */
+  .card--interactive, a.card { transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+  .card--interactive:hover, a.card:hover { transform: translateY(-2px); border-color: var(--color-accent); box-shadow: var(--shadow-md); }
+  .btn--primary { position: relative; overflow: hidden; }
+  .btn--primary::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.22) 50%, transparent 65%); transform: translateX(-120%); transition: transform 0.6s ease; }
+  .btn--primary:hover::after { transform: translateX(120%); }
+  .fab { animation: fab-in 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) 0.4s both; }
+  .nav-item svg { transition: transform 0.2s ease; }
+  .nav-item:hover svg { transform: translateY(-1px) scale(1.06); }
+  .bottom-nav .nav-item.active::before { animation: nav-bar 0.3s ease both; }
+  .sidebar .nav-item.active::before { animation: nav-bar-v 0.3s ease both; }
+  .badge { animation: pop 0.35s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+  .sheet { animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+  /* Entrada: login */
+  .auth-card > * { animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: 0.08s; }
+  .auth-hero__list li { animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 110ms + 400ms); }
+  .auth-hero__headline, .auth-hero__sub { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .auth-hero__sub { animation-delay: 0.12s; }
+  .plumb-line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards; }
+  .plumb-bob { transform-box: fill-box; transform-origin: 50% 0; animation: bob-drop 0.7s cubic-bezier(0.3, 1.6, 0.5, 1) 1.3s both; }
+  .plumb-swing { transform-box: fill-box; transform-origin: 50% 0; animation: sway 5s ease-in-out 2.2s infinite alternate; }
+  .splash-logo { animation: pulse-soft 1.6s ease-in-out infinite; }
+}
+
+@keyframes ruler-grow { from { transform: scaleX(0); } }
+@keyframes plumb-swing { 0% { transform: translateX(-50%) rotate(16deg); } 25% { transform: translateX(-50%) rotate(-9deg); } 50% { transform: translateX(-50%) rotate(5deg); } 75% { transform: translateX(-50%) rotate(-2deg); } 100% { transform: translateX(-50%) rotate(0); } }
+@keyframes bar-grow { from { transform: scaleY(0); } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes zoom-in { from { transform: scale(0.2); opacity: 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes fab-in { from { opacity: 0; transform: translateY(24px) scale(0.8); } to { opacity: 1; transform: none; } }
+@keyframes nav-bar { from { transform: scaleX(0); } }
+@keyframes nav-bar-v { from { transform: scaleY(0); } }
+@keyframes bob-drop { from { transform: translateY(-40px); opacity: 0; } to { opacity: 1; } }
+@keyframes pulse-soft { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+@keyframes sway { from { transform: rotate(-1.6deg); } to { transform: rotate(1.6deg); } }
+@media (prefers-reduced-motion: no-preference) {
+  .auth-card > :nth-child(2) { animation-delay: 0.15s; }
+  .auth-card > :nth-child(3) { animation-delay: 0.22s; }
+  .auth-card > :nth-child(n + 4) { animation-delay: 0.3s; }
+}

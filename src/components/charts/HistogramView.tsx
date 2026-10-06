@@ -17,7 +17,7 @@ export function HistogramView({ bins }: { bins: HistogramBin[] }) {
         const h = (b.count / max) * ph;
         return (
           <g key={i}>
-            <rect x={M.left + i * bw + 1} y={M.top + ph - h} width={bw - 2} height={Math.max(h, b.count ? 1 : 0)} rx={1.5} style={{ fill: "var(--color-accent)" }}>
+            <rect className="bar" x={M.left + i * bw + 1} y={M.top + ph - h} width={bw - 2} height={Math.max(h, b.count ? 1 : 0)} rx={1.5} style={{ fill: "var(--color-accent)", ["--i" as string]: i }}>
               <title>{`${formatCurrencyCompact(b.from)} a ${formatCurrencyCompact(b.to)}: ${b.count} semana(s)`}</title>
             </rect>
             {b.count > 0 && <text className="axis" x={M.left + i * bw + bw / 2} y={M.top + ph - h - 4} textAnchor="middle">{b.count}</text>}
