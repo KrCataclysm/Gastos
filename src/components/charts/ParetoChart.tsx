@@ -1,5 +1,5 @@
-import type { ParetoItem } from "../../domain/analytics";
-import { formatBRL, formatPercent } from "../../lib/money";
+import type { ParetoItem } from "@/lib/analysis";
+import { formatCurrency as formatBRL, formatPercent } from "@/lib/format";
 
 const W = 640;
 const H = 330;
@@ -37,19 +37,19 @@ export function ParetoChart({ items }: { items: ParetoItem[] }) {
           <text className="axis" x={M.left - 6} y={yPct(t) + 4} textAnchor="end">{formatCompact(max * t)}</text>
         </g>
       ))}
-      <line x1={M.left} x2={W - M.right} y1={yPct(0.8)} y2={yPct(0.8)} stroke="var(--warn)" strokeWidth={1.5} strokeDasharray="6 4" />
-      <text x={W - M.right + 6} y={yPct(0.8) + 4} fontSize={11} fontWeight={700} style={{ fill: "var(--warn)" }}>80%</text>
+      <line x1={M.left} x2={W - M.right} y1={yPct(0.8)} y2={yPct(0.8)} stroke="var(--color-warning)" strokeWidth={1.5} strokeDasharray="6 4" />
+      <text x={W - M.right + 6} y={yPct(0.8) + 4} fontSize={11} fontWeight={700} style={{ fill: "var(--color-warning)" }}>80%</text>
       {data.map((d, i) => (
         <g key={d.id}>
-          <rect x={x(i) - bw / 2} y={yVal(d.total)} width={bw} height={Math.max(1, M.top + ph - yVal(d.total))} rx={4} fill={d.vital ? "var(--accent)" : "var(--chart-muted)"}>
+          <rect x={x(i) - bw / 2} y={yVal(d.total)} width={bw} height={Math.max(1, M.top + ph - yVal(d.total))} rx={4} fill={d.vital ? "var(--color-accent)" : "var(--chart-muted)"}>
             <title>{`${d.name}: ${formatBRL(d.total)} (${formatPercent(d.share)}, acumulado ${formatPercent(d.cumulative)})`}</title>
           </rect>
           <text x={x(i)} y={yVal(d.total) - 6} textAnchor="middle" fontSize={11} fontWeight={600}>{formatPercent(d.share)}</text>
           <text className="axis" transform={`translate(${x(i)},${H - M.bottom + 14}) rotate(-35)`} textAnchor="end">{clip(d.name, 16)}</text>
         </g>
       ))}
-      <path d={line} fill="none" stroke="var(--text)" strokeWidth={2} />
-      {data.map((d, i) => <circle key={d.id} cx={x(i)} cy={yPct(d.cumulative)} r={3.5} style={{ fill: "var(--surface)", stroke: "var(--text)" }} strokeWidth={2} />)}
+      <path d={line} fill="none" stroke="var(--color-text)" strokeWidth={2} />
+      {data.map((d, i) => <circle key={d.id} cx={x(i)} cy={yPct(d.cumulative)} r={3.5} style={{ fill: "var(--color-panel)", stroke: "var(--color-text)" }} strokeWidth={2} />)}
     </svg>
   );
 }

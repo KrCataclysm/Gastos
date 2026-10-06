@@ -1,58 +1,58 @@
 # Gastos
 
-Controle de gastos pensado para universitários: lança em 10 segundos, enxerga para onde o dinheiro vai e dispensa a planilha.
+Controle de gastos pensado para universitários: lança em segundos, enxerga para onde o dinheiro vai e aplica **ferramentas de Gestão da Qualidade** (Pareto, Ishikawa) às próprias finanças, sem planilha.
 
-**Funciona como app (PWA)** no celular e no computador, com tema claro/escuro. Publicado em <https://krcataclysm.github.io/Gastos/>.
+App instalável (PWA) que **funciona offline** e sincroniza quando a internet volta. Publicado em <https://krcataclysm.github.io/Gastos/>.
 
 ## O que tem
 
 | Área | O que entrega |
 |---|---|
-| **Início** | Sobra do mês, receitas, despesas, saldo nas contas, quanto dá para gastar por dia, alertas em linguagem simples |
-| **Lançamentos** | Despesas, receitas e transferências; busca, filtros, desfazer exclusão, exportar CSV |
-| **Análises** | **Pareto** (poucos vitais, 80%), **Ishikawa** (causa e efeito dos gastos), evolução 6 meses, fixos × variáveis, **relatório** para imprimir/PDF |
-| **Orçamento** | Limite por categoria e por mês, com progresso; copia do mês anterior |
-| **Metas** | Notebook, intercâmbio, formatura: quanto guardar por mês para chegar a tempo |
-| **Contas fixas** | Mensalidade, aluguel, assinaturas: o app avisa quando vencem e lança com um toque |
-| **Perfil** | Instituição, curso, semestre, meta de renda, troca de senha, backup JSON |
+| **Início** | Patrimônio, receitas e despesas do mês, taxa de poupança, projeção de fim de mês |
+| **Lançamentos** | Despesa, receita e transferência; contas, categorias, tags, contas fixas |
+| **Orçamento / Metas** | Limite por categoria e mês; metas com prazo e quanto guardar por mês |
+| **Relatórios** | DRE simplificado, evolução, distribuição, **Pareto 80/20** e **diagrama de Ishikawa**, exportação CSV e PDF |
+| **Ferramentas** | Pareto manual, Gantt, fluxograma, checklist e quadro (apoio às aulas de qualidade) |
+| **Perfil** | Avatar, apelido, dados acadêmicos (instituição, curso, semestre, meta de renda), senha, backup JSON |
+| **Configurações** | 7 temas prontos + modo automático, **tema próprio** (cores, fonte, cantos), importar/exportar tema, **acessibilidade** (tamanho, espaçamento, bordas e foco reforçados, alvos maiores, menos animação) e checagem de contraste WCAG |
 
 ## Stack
 
-Vite 8 · React 19 · TypeScript estrito · React Router · TanStack Query · Zod · Supabase (Auth + Postgres com RLS). Gráficos em SVG próprio (sem biblioteca de charts). CSS com *design tokens*.
+Vite 5 · React 18 · TypeScript estrito · React Router · Supabase (Auth + Postgres com RLS) · IndexedDB (offline-first) · vite-plugin-pwa · Vitest.
 
 ```
 src/
-  domain/    regras puras e testadas (resumo, Pareto, Ishikawa, saldos, recorrências, orçamento)
-  data/      acesso ao Supabase (queries e mutations)
-  lib/       dinheiro (centavos), datas locais, CSV seguro, validação
-  components/ pages/ styles/
-tests/       Vitest
-supabase/    migrations aplicadas e SQL pendente de revisão
+  lib/        regras puras (calc, analysis: Pareto/Ishikawa, contraste, csv), sync e acesso local
+  contexts/   Auth, Data (offline-first + sync), Theme (temas e acessibilidade)
+  pages/ components/ styles/
+tests/        Vitest: analysis, contraste/temas, csv
+supabase/     migrations (aplicadas) e SQL pendente de revisão
+design/       fontes do logo e gerador de ícones do PWA
 ```
 
 ## Rodar
 
 ```bash
 npm ci
-cp .env.example .env.local   # já aponta para o projeto Supabase "gastos"
+cp .env.example .env.local   # URL e chave pública do projeto Supabase
 npm run dev                  # http://localhost:5173/Gastos/
 npm run typecheck && npm test && npm run build
 ```
 
+Para regerar os ícones do PWA a partir do logo: `node design/build-icons.mjs` (requer Playwright + Chromium).
+
 ## Segurança
 
 - **RLS em todas as tabelas**: cada linha só é visível/editável por quem tem `user_id = auth.uid()`.
-- A chave no front é a **publishable/anon**, pública por desenho. Nunca use `service_role` no front.
-- Valores monetários são somados em **centavos inteiros** (sem erro de ponto flutuante).
-- Exportação CSV **neutraliza injeção de fórmula** (`=`, `+`, `-`, `@`).
-- Sem `dangerouslySetInnerHTML`; **CSP** restrita; service worker nunca cacheia chamadas à API.
-- Exclusões são lógicas (`deleted_at`) e há "Desfazer".
-- Contas fixas usam *claim* condicional para não lançar em duplicidade (duas abas / duplo clique).
+- A chave no front-end é a **anon/publishable**, pública por desenho. Nunca use `service_role` no cliente.
+- Exportação CSV **neutraliza injeção de fórmula** (`=`, `+`, `-`, `@`) nos textos.
+- Chamadas à API nunca são cacheadas pelo service worker (`NetworkOnly`).
+- Exclusões são lógicas (`deleted_at`) e sincronizadas.
 
 ### Configuração manual no painel do Supabase
 
-1. **Authentication › URL Configuration**: Site URL `https://krcataclysm.github.io/Gastos/` e adicione a mesma URL (e `http://localhost:5173/Gastos/`) em *Redirect URLs*. Sem isso, e-mail de confirmação e "esqueci a senha" não voltam para o app.
-2. **Authentication › Providers › Email**: ative *Leaked password protection*.
+1. **Authentication › URL Configuration**: Site URL `https://krcataclysm.github.io/Gastos/` e a mesma URL (e `http://localhost:5173/Gastos/`) em *Redirect URLs*. Sem isso, e-mail de confirmação e "esqueci a senha" não voltam para o app.
+2. **Authentication › Providers › Email**: ative *Leaked password protection*. Para uso por uma turma, configure um SMTP próprio (o remetente padrão tem limite baixo de e-mails por hora).
 3. Revise e aplique `supabase/pending/hardening_review_before_applying.sql` (menor privilégio, integridade entre tabelas, categorias de universitário para novos usuários).
 
 ## Deploy

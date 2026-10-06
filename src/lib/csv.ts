@@ -1,23 +1,59 @@
+import type { Account, Category, Transaction } from "@/types";
+import { formatDate } from "@/lib/format";
+
+function escapeCsv(value: string): string {
+  if (/[";\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
+  return value;
+}
+
 /**
- * Escapa uma célula CSV. Prefixa com apóstrofo valores que começam com = + - @
- * para impedir injeção de fórmula quando o arquivo é aberto no Excel/Sheets.
+ * Neutraliza injeção de fórmula: texto digitado pelo usuário que começa com = + - @ (ou tab/CR)
+ * seria executado como fórmula ao abrir o CSV no Excel/Sheets. Prefixar com apóstrofo o torna texto.
+ * Não usar em colunas numéricas legítimas (ex.: "-12,50").
  */
-export function csvCell(value: string | number | null | undefined): string {
-  let s = value == null ? "" : String(value);
-  if (typeof value === "string" && /^[=+\-@\t\r]/.test(s)) s = `'${s}`;
-  return /[",;\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+export function safeText(value: string): string {
+  return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
 }
 
-export function toCSV(header: string[], rows: (string | number | null | undefined)[][]): string {
-  const lines = [header, ...rows].map((r) => r.map(csvCell).join(";"));
-  return "﻿" + lines.join("\r\n"); // BOM: Excel reconhece UTF-8; ";" é o separador do Excel pt-BR
+export function transactionsToCsv(
+  transactions: Transaction[],
+  accounts: Account[],
+  categories: Category[],
+): string {
+  const accountMap = new Map(accounts.map((a) => [a.id, a.name]));
+  const categoryMap = new Map(categories.map((c) => [c.id, c.name]));
+  const header = ["Data", "Tipo", "Descrição", "Categoria", "Conta", "Valor", "Status"];
+  const rows = transactions
+    .filter((t) => !t.deleted_at)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((t) => {
+      const signed = t.type === "expense" ? -t.amount : t.amount;
+      return [
+        formatDate(t.date),
+        t.type === "income" ? "Receita" : t.type === "expense" ? "Despesa" : "Transferência",
+        safeText(t.description),
+        safeText(t.category_id ? categoryMap.get(t.category_id) ?? "" : ""),
+        safeText(accountMap.get(t.account_id) ?? ""),
+        signed.toFixed(2).replace(".", ","),
+        t.status === "cleared" ? "Efetivado" : "Pendente",
+      ];
+    });
+  const lines = [header, ...rows].map((r) => r.map((c) => escapeCsv(String(c))).join(";"));
+  return "﻿" + lines.join("\n");
 }
 
-export function downloadText(filename: string, content: string, mime = "text/csv;charset=utf-8"): void {
-  const url = URL.createObjectURL(new Blob([content], { type: mime }));
+export function downloadCsv(filename: string, csv: string): void {
+  downloadText(filename, csv, "text/csv;charset=utf-8;");
+}
+
+export function downloadText(filename: string, content: string, mime: string): void {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
   a.download = filename;
+  document.body.appendChild(a);
   a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  a.remove();
+  URL.revokeObjectURL(url);
 }

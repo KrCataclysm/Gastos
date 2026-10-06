@@ -1,9 +1,18 @@
 import { createClient } from "@supabase/supabase-js";
 
-const url = import.meta.env.VITE_SUPABASE_URL ?? "https://khizjnhphngxbzveiguv.supabase.co";
-// Chave pública (publishable): o acesso real aos dados é imposto por RLS no Postgres.
-const key = import.meta.env.VITE_SUPABASE_ANON_KEY ?? "sb_publishable_V5MgErvWJRFlqy3szbCUSg_nGKAc4jQ";
+const url = import.meta.env.VITE_SUPABASE_URL as string;
+const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
-export const supabase = createClient(url, key, {
-  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "pkce" },
+if (!url || !anonKey) {
+  console.warn(
+    "Supabase não configurado: defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY (.env.local).",
+  );
+}
+
+export const supabase = createClient(url, anonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
 });

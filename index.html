@@ -2,20 +2,41 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0f766e" />
-    <meta name="description" content="Gastos: controle de receitas e despesas pensado para universitários." />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'" />
-    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+    <meta name="theme-color" content="#101425" />
+    <meta name="description" content="Gastos: controle de receitas e despesas para universitários, com ferramentas de gestão da qualidade (Pareto, Ishikawa)." />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Gastos" />
     <link rel="icon" type="image/svg+xml" href="/Gastos/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/Gastos/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/Gastos/favicon-16.png" />
     <link rel="apple-touch-icon" href="/Gastos/icons/apple-touch-icon.png" />
-    <link rel="manifest" href="/Gastos/manifest.webmanifest" />
-    <title>Gastos</title>
-    <script src="/Gastos/theme-boot.js"></script>
+    <title>Gastos - Controle de Gastos</title>
+    <script>
+      // Restaura a rota original após o redirect do 404.html (GitHub Pages SPA fallback).
+      (function () {
+        var redirect = new URLSearchParams(window.location.search).get("redirect");
+        if (redirect) {
+          window.history.replaceState(null, "", window.location.pathname.replace(/\/$/, "") + "/" + redirect);
+        }
+      })();
+      // Reaplica o tema salvo antes do React carregar (evita piscar). O cache "gastos:css" é gerado pelo app.
+      (function () {
+        try {
+          var c = JSON.parse(localStorage.getItem("gastos:css") || "null");
+          if (!c) return;
+          var r = document.documentElement;
+          var k;
+          for (k in c.vars) r.style.setProperty(k, c.vars[k]);
+          for (k in c.attrs) r.setAttribute(k, c.attrs[k]);
+          r.style.colorScheme = c.scheme;
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m && c.themeColor) m.setAttribute("content", c.themeColor);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

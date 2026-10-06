@@ -13,6 +13,11 @@ concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Chave pública (anon): segura no front-end, o acesso aos dados é imposto por RLS no Postgres.
+  VITE_SUPABASE_URL: https://khizjnhphngxbzveiguv.supabase.co
+  VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoaXpqbmhwaG5neGJ6dmVpZ3V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzODk3NTAsImV4cCI6MjA5ODk2NTc1MH0.ZB8PD5XzjGEu0pbgCZSkX424u_IafcdZKdq2ILMS7sE
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -20,7 +25,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           cache: npm
       - run: npm ci
       - run: npm run typecheck
