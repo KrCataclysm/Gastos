@@ -9,6 +9,7 @@ import {
   Tags,
   Target,
   Trophy,
+  UserRound,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -22,6 +23,7 @@ interface NavItem {
 import { InstallPrompt } from "@/components/layout/InstallPrompt";
 import { SyncBadge } from "@/components/layout/SyncBadge";
 import { useData } from "@/contexts/DataContext";
+import { Logo } from "@/components/brand/Logo";
 
 const PRIMARY_NAV: NavItem[] = [
   { to: "/", label: "Início", icon: LayoutDashboard, end: true },
@@ -35,6 +37,7 @@ const PRIMARY_NAV: NavItem[] = [
 const SECONDARY_NAV: NavItem[] = [
   { to: "/categorias", label: "Categorias", icon: Tags },
   { to: "/contas", label: "Contas", icon: Landmark },
+  { to: "/perfil", label: "Perfil", icon: UserRound },
   { to: "/configuracoes", label: "Configurações", icon: Settings },
 ];
 
@@ -43,8 +46,9 @@ export function AppShell() {
 
   return (
     <div className="app-shell">
+      <a href="#conteudo" className="skip-link">Pular para o conteúdo</a>
       <aside className="sidebar">
-        <div className="sidebar__brand">Gastos</div>
+        <div className="sidebar__brand" style={{ display: "flex", alignItems: "center", gap: 10 }}><Logo size={30} />Gastos</div>
         {[...PRIMARY_NAV, ...SECONDARY_NAV].map((item) => (
           <NavLink
             key={item.to}
@@ -61,7 +65,7 @@ export function AppShell() {
         </div>
       </aside>
 
-      <main className="app-main">
+      <main className="app-main" id="conteudo" tabIndex={-1}>
         <InstallPrompt />
         {loading ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>

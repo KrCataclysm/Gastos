@@ -4,11 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
     <meta name="theme-color" content="#101425" />
-    <meta name="description" content="Gastos: sua planilha de custos profissional na palma da mão." />
+    <meta name="description" content="Gastos: controle de receitas e despesas para universitários, com ferramentas de gestão da qualidade (Pareto, Ishikawa)." />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Gastos" />
+    <link rel="icon" type="image/svg+xml" href="/Gastos/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/Gastos/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/Gastos/favicon-16.png" />
     <link rel="apple-touch-icon" href="/Gastos/icons/apple-touch-icon.png" />
@@ -21,23 +22,18 @@
           window.history.replaceState(null, "", window.location.pathname.replace(/\/$/, "") + "/" + redirect);
         }
       })();
+      // Reaplica o tema salvo antes do React carregar (evita piscar). O cache "gastos:css" é gerado pelo app.
       (function () {
         try {
-          var raw = localStorage.getItem("gastos:theme");
-          if (!raw) return;
-          var t = JSON.parse(raw);
-          var r = document.documentElement.style;
-          r.setProperty("--color-bg", t.bgColor);
-          r.setProperty("--color-panel", t.panelColor);
-          r.setProperty("--color-panel-alt", t.panelAltColor);
-          r.setProperty("--color-border", t.borderColor);
-          r.setProperty("--color-text", t.fontColor);
-          r.setProperty("--color-text-muted", t.mutedColor);
-          r.setProperty("--color-accent", t.accentColor);
-          r.setProperty("--color-income", t.incomeColor);
-          r.setProperty("--color-expense", t.expenseColor);
-          r.setProperty("--color-radius", t.radius + "px");
-          document.documentElement.style.colorScheme = t.mode;
+          var c = JSON.parse(localStorage.getItem("gastos:css") || "null");
+          if (!c) return;
+          var r = document.documentElement;
+          var k;
+          for (k in c.vars) r.style.setProperty(k, c.vars[k]);
+          for (k in c.attrs) r.setAttribute(k, c.attrs[k]);
+          r.style.colorScheme = c.scheme;
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m && c.themeColor) m.setAttribute("content", c.themeColor);
         } catch (e) {}
       })();
     </script>

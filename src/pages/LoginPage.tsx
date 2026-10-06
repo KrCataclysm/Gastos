@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LogIn } from "lucide-react";
+import { Logo } from "@/components/brand/Logo";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useAuth } from "@/contexts/AuthContext";
@@ -27,7 +28,7 @@ export function LoginPage() {
     <AuthLayout>
       <div className="auth-card">
         <div className="auth-card__brand">
-          <div className="auth-card__brand-mark">G</div>
+          <Logo size={36} />
           Gastos
         </div>
         <div>
@@ -42,7 +43,7 @@ export function LoginPage() {
               id="email"
               className="input"
               type="email"
-              autoComplete="email"
+              autoComplete="username"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}

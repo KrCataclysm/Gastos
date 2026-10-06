@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ChevronRight, Landmark, LogOut, Settings, Tags } from "lucide-react";
+import { ChevronRight, Landmark, LogOut, Settings, Tags, UserRound } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { SyncBadge } from "@/components/layout/SyncBadge";
@@ -7,7 +7,8 @@ import { SyncBadge } from "@/components/layout/SyncBadge";
 const ITEMS = [
   { to: "/categorias", label: "Categorias", icon: Tags },
   { to: "/contas", label: "Contas e carteiras", icon: Landmark },
-  { to: "/configuracoes", label: "Configurações", icon: Settings },
+  { to: "/perfil", label: "Perfil", icon: UserRound },
+  { to: "/configuracoes", label: "Configurações (temas e acessibilidade)", icon: Settings },
 ];
 
 export function MorePage() {

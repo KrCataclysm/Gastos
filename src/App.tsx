@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { DataProvider } from "@/contexts/DataContext";
 import { ToastProvider } from "@/components/ui/Toast";
+import { Logo } from "@/components/brand/Logo";
 import { AppShell } from "@/components/layout/AppShell";
 import { LoginPage } from "@/pages/LoginPage";
 import { SignupPage } from "@/pages/SignupPage";
@@ -19,6 +20,7 @@ import { MorePage } from "@/pages/MorePage";
 const DashboardPage = lazy(() => import("@/pages/DashboardPage").then((m) => ({ default: m.DashboardPage })));
 const ReportsPage = lazy(() => import("@/pages/ReportsPage").then((m) => ({ default: m.ReportsPage })));
 const GoalsPage = lazy(() => import("@/pages/GoalsPage").then((m) => ({ default: m.GoalsPage })));
+const ProfilePage = lazy(() => import("@/pages/ProfilePage").then((m) => ({ default: m.ProfilePage })));
 const ToolsPage = lazy(() => import("@/pages/ToolsPage").then((m) => ({ default: m.ToolsPage })));
 
 function PageFallback() {
@@ -33,7 +35,7 @@ function PageFallback() {
 function Splash() {
   return (
     <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--color-bg)" }}>
-      <div style={{ fontWeight: 800, fontSize: 22, color: "var(--color-text)" }}>Gastos</div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, fontWeight: 800, fontSize: 22, color: "var(--color-text)" }}><Logo size={40} />Gastos</div>
     </div>
   );
 }
@@ -98,6 +100,14 @@ function Router() {
           element={
             <Suspense fallback={<PageFallback />}>
               <ReportsPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/perfil"
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <ProfilePage />
             </Suspense>
           }
         />

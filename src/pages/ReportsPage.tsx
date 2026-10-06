@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useData } from "@/contexts/DataContext";
 import { MonthlyBarChart } from "@/components/charts/MonthlyBarChart";
 import { CategoryPieChart } from "@/components/charts/CategoryPieChart";
+import { QualityTools } from "@/components/reports/QualityTools";
 import { buildDRE, categoryDistribution, lastNMonthsSeries, monthsSinceRegistration, monthTotals } from "@/lib/calc";
 import { formatCurrency, formatPercent, monthLabel } from "@/lib/format";
 import { downloadCsv, transactionsToCsv } from "@/lib/csv";
@@ -83,6 +84,8 @@ export function ReportsPage() {
           <Row label="Taxa de poupança" value={dre.savingsRate} tone="neutral" isPercent />
         </div>
       </div>
+
+      <QualityTools transactions={transactions} categories={categories} start={start} end={end} label={monthLabel(year, month)} />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px,1fr))", gap: 12 }}>
         <div className="card">

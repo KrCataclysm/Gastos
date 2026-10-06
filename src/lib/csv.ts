@@ -2,8 +2,17 @@ import type { Account, Category, Transaction } from "@/types";
 import { formatDate } from "@/lib/format";
 
 function escapeCsv(value: string): string {
-  if (/[";\n]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
+  if (/[";\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
   return value;
+}
+
+/**
+ * Neutraliza injeção de fórmula: texto digitado pelo usuário que começa com = + - @ (ou tab/CR)
+ * seria executado como fórmula ao abrir o CSV no Excel/Sheets. Prefixar com apóstrofo o torna texto.
+ * Não usar em colunas numéricas legítimas (ex.: "-12,50").
+ */
+export function safeText(value: string): string {
+  return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
 }
 
 export function transactionsToCsv(
@@ -22,9 +31,9 @@ export function transactionsToCsv(
       return [
         formatDate(t.date),
         t.type === "income" ? "Receita" : t.type === "expense" ? "Despesa" : "Transferência",
-        t.description,
-        t.category_id ? categoryMap.get(t.category_id) ?? "" : "",
-        accountMap.get(t.account_id) ?? "",
+        safeText(t.description),
+        safeText(t.category_id ? categoryMap.get(t.category_id) ?? "" : ""),
+        safeText(accountMap.get(t.account_id) ?? ""),
         signed.toFixed(2).replace(".", ","),
         t.status === "cleared" ? "Efetivado" : "Pendente",
       ];
@@ -34,7 +43,11 @@ export function transactionsToCsv(
 }
 
 export function downloadCsv(filename: string, csv: string): void {
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  downloadText(filename, csv, "text/csv;charset=utf-8;");
+}
+
+export function downloadText(filename: string, content: string, mime: string): void {
+  const blob = new Blob([content], { type: mime });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;

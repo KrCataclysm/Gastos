@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { MailCheck, UserPlus } from "lucide-react";
+import { Logo } from "@/components/brand/Logo";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useAuth } from "@/contexts/AuthContext";
@@ -22,8 +23,8 @@ export function SignupPage() {
       setError("As senhas não coincidem.");
       return;
     }
-    if (password.length < 6) {
-      setError("A senha precisa ter pelo menos 6 caracteres.");
+    if (password.length < 8) {
+      setError("A senha precisa ter pelo menos 8 caracteres.");
       return;
     }
     setLoading(true);
@@ -38,7 +39,7 @@ export function SignupPage() {
       <AuthLayout>
         <div className="auth-card">
           <div className="auth-card__brand">
-            <div className="auth-card__brand-mark">G</div>
+            <Logo size={36} />
             Gastos
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" }}>
@@ -60,7 +61,7 @@ export function SignupPage() {
     <AuthLayout>
       <div className="auth-card">
         <div className="auth-card__brand">
-          <div className="auth-card__brand-mark">G</div>
+          <Logo size={36} />
           Gastos
         </div>
         <div>
@@ -86,7 +87,7 @@ export function SignupPage() {
               id="email"
               className="input"
               type="email"
-              autoComplete="email"
+              autoComplete="username"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -101,7 +102,7 @@ export function SignupPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Mínimo 8 caracteres"
             />
           </div>
           <div className="field">

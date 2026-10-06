@@ -47,7 +47,7 @@
 
 .btn--primary {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
-  color: white;
+  color: var(--color-on-accent, white);
   box-shadow: 0 8px 20px -6px var(--color-accent-soft);
 }
 
@@ -434,3 +434,21 @@
     opacity: 0.35;
   }
 }
+
+/* ---------- Gráficos SVG (Pareto, Ishikawa) ---------- */
+.chart { width: 100%; height: auto; display: block; }
+.chart text { font-family: var(--font-family); fill: var(--color-text); }
+.chart .axis { fill: var(--color-text-muted); font-size: 11px; }
+.chart .gridline { stroke: var(--color-border); stroke-width: 1; }
+.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--color-text-muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.callout { display: flex; gap: 10px; padding: 12px 14px; border-radius: var(--color-radius-sm); background: var(--color-info-soft); font-size: 13px; line-height: 1.45; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th, .data-table td { padding: 8px 6px; text-align: left; border-bottom: 1px solid var(--color-border); }
+.data-table th { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--color-text-muted); }
+.data-table .r { text-align: right; }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 4px; background: var(--color-panel-alt); border-radius: var(--color-radius-sm); gap: 4px; }
+.seg button { min-height: 34px; border: 0; border-radius: calc(var(--color-radius-sm) - 2px); background: transparent; font-weight: 600; color: var(--color-text-muted); cursor: pointer; font-family: inherit; }
+.seg button[aria-pressed="true"] { background: var(--color-panel); color: var(--color-text); box-shadow: var(--shadow-sm); }

@@ -18,16 +18,17 @@ export default defineConfig({
       registerType: "autoUpdate",
       injectRegister: "auto",
       includeAssets: [
+        "favicon.svg",
         "favicon-16.png",
         "favicon-32.png",
         "icons/apple-touch-icon.png",
       ],
       manifest: {
         id: base,
-        name: "Gastos - Controle de Gastos",
+        name: "Gastos - Controle financeiro universitário",
         short_name: "Gastos",
         description:
-          "Planilha de custos profissional na palma da mão: receitas, despesas, orçamento e relatórios.",
+          "Controle de receitas e despesas para universitários: orçamento, metas, Pareto e Ishikawa.",
         start_url: base,
         scope: base,
         display: "standalone",

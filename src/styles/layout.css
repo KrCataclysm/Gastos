@@ -139,7 +139,7 @@
   height: 56px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
-  color: white;
+  color: var(--color-on-accent, white);
   border: none;
   display: flex;
   align-items: center;
@@ -197,7 +197,7 @@
   height: 40px;
   border-radius: 12px;
   background: var(--color-accent);
-  color: white;
+  color: var(--color-on-accent, white);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { MailCheck, SendHorizontal } from "lucide-react";
+import { Logo } from "@/components/brand/Logo";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -25,7 +26,7 @@ export function ForgotPasswordPage() {
     <AuthLayout>
       <div className="auth-card">
         <div className="auth-card__brand">
-          <div className="auth-card__brand-mark">G</div>
+          <Logo size={36} />
           Gastos
         </div>
         {sent ? (
@@ -49,7 +50,7 @@ export function ForgotPasswordPage() {
                   id="email"
                   className="input"
                   type="email"
-                  autoComplete="email"
+                  autoComplete="username"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
