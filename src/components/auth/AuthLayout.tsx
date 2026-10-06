@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
 import { ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
+import { BRAND } from "@/brand";
 
 export function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="auth-screen">
       <div className="auth-hero">
         <div className="auth-hero__brand">
-          <Sparkles size={22} /> Gastos
+          <Sparkles size={22} /> {BRAND.name}
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>

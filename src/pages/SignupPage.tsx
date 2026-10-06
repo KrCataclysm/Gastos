@@ -5,6 +5,7 @@ import { Logo } from "@/components/brand/Logo";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useAuth } from "@/contexts/AuthContext";
+import { BRAND } from "@/brand";
 
 export function SignupPage() {
   const { signUp } = useAuth();
@@ -40,7 +41,7 @@ export function SignupPage() {
         <div className="auth-card">
           <div className="auth-card__brand">
             <Logo size={36} />
-            Gastos
+            {BRAND.name}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" }}>
             <MailCheck size={32} color="var(--color-accent-strong)" />
@@ -62,7 +63,7 @@ export function SignupPage() {
       <div className="auth-card">
         <div className="auth-card__brand">
           <Logo size={36} />
-          Gastos
+          {BRAND.name}
         </div>
         <div>
           <h1>Criar sua conta</h1>
