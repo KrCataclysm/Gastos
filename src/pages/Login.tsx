@@ -87,9 +87,9 @@ export function Login() {
         <div className="brand"><span className="brand-mark"><Wallet2 size={18} /></span>Gastos</div>
         <div><h1>{title}</h1><p className="muted">Seu controle financeiro de faculdade, sem planilha.</p></div>
         {notice && <Banner tone={notice.tone}>{notice.text}</Banner>}
-        {active === "signup" && <TextField label="Nome" value={name} onChange={(e) => setName(e.target.value)} error={errors.name} autoComplete="name" />}
-        {active !== "reset" && <TextField label="E-mail" type="email" value={mail} onChange={(e) => setMail(e.target.value)} error={errors.email} autoComplete="email" inputMode="email" />}
-        {active !== "forgot" && <TextField label={active === "reset" ? "Nova senha" : "Senha"} type="password" value={pass} onChange={(e) => setPass(e.target.value)} error={errors.password} autoComplete={active === "login" ? "current-password" : "new-password"} hint={active === "login" ? undefined : "Mínimo de 8 caracteres."} />}
+        {active === "signup" && <TextField label="Nome" name="name" value={name} onChange={(e) => setName(e.target.value)} error={errors.name} autoComplete="name" />}
+        {active !== "reset" && <TextField label="E-mail" name="email" type="email" value={mail} onChange={(e) => setMail(e.target.value)} error={errors.email} autoComplete="username" inputMode="email" autoCapitalize="none" spellCheck={false} />}
+        {active !== "forgot" && <TextField label={active === "reset" ? "Nova senha" : "Senha"} name="password" type="password" value={pass} onChange={(e) => setPass(e.target.value)} error={errors.password} autoComplete={active === "login" ? "current-password" : "new-password"} hint={active === "login" ? undefined : "Mínimo de 8 caracteres."} />}
         <button className="btn primary" type="submit" disabled={busy}>{busy ? "Aguarde…" : title}</button>
         {!recovering && (
           <div className="row between wrap">
