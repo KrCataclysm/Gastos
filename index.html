@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
-    <meta name="theme-color" content="#101425" />
+    <meta name="theme-color" content="#f3f1eb" />
     <meta name="description" content="Prumo: controle de receitas e despesas para universitários, com ferramentas de gestão da qualidade (Pareto, Ishikawa)." />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -25,7 +25,7 @@
       // Reaplica o tema salvo antes do React carregar (evita piscar). O cache "gastos:css" é gerado pelo app.
       (function () {
         try {
-          var c = JSON.parse(localStorage.getItem("gastos:css") || "null");
+          var c = JSON.parse(localStorage.getItem("gastos:css:v2") || "null");
           if (!c) return;
           var r = document.documentElement;
           var k;

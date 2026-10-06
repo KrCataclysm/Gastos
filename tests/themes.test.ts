@@ -29,9 +29,9 @@ describe("sanitizeTheme (não confia em localStorage nem em tema importado)", ()
   });
   it("descarta valores inválidos e limita faixas", () => {
     const t = sanitizeTheme({ mode: "x", fontFamily: "comic", accentColor: "red", radius: 999, presetId: "<script>", a11y: { uiScale: 9, wideSpacing: "sim" } });
-    expect(t.mode).toBe("dark");
-    expect(t.fontFamily).toBe("inter");
-    expect(t.accentColor).toBe("#6064f0");
+    expect(t.mode).toBe("light");
+    expect(t.fontFamily).toBe("ibm-plex-sans");
+    expect(t.accentColor).toBe("#0e6b62");
     expect(t.radius).toBe(28);
     expect(t.presetId).toBe("custom");
     expect(t.a11y.uiScale).toBe(1.3);

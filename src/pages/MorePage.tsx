@@ -1,14 +1,22 @@
-import { Link } from "react-router-dom";
-import { ChevronRight, Landmark, LogOut, Settings, Tags, UserRound } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ChevronRight, Flag, Landmark, LogOut, Settings, Tags, UserRound, Wrench, type LucideIcon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { SyncBadge } from "@/components/layout/SyncBadge";
+import { PageHeader } from "@/components/ui/PageHeader";
 
-const ITEMS = [
-  { to: "/categorias", label: "Categorias", icon: Tags },
-  { to: "/contas", label: "Contas e carteiras", icon: Landmark },
-  { to: "/perfil", label: "Perfil", icon: UserRound },
-  { to: "/configuracoes", label: "Configurações (temas e acessibilidade)", icon: Settings },
+const GROUPS: { label: string; items: { to: string; label: string; hint: string; icon: LucideIcon }[] }[] = [
+  { label: "Objetivos e análise", items: [
+    { to: "/metas", label: "Metas", hint: "Quanto guardar e se você está no prumo do prazo", icon: Flag },
+    { to: "/ferramentas", label: "Ferramentas", hint: "Pareto, Ishikawa, PDCA, 5S, Gantt e mais", icon: Wrench },
+  ] },
+  { label: "Organização", items: [
+    { to: "/categorias", label: "Categorias", hint: "Despesas e receitas, fixas e variáveis", icon: Tags },
+    { to: "/contas", label: "Contas e carteiras", hint: "Saldos, cartões e faturas", icon: Landmark },
+  ] },
+  { label: "Conta", items: [
+    { to: "/perfil", label: "Perfil", hint: "Dados acadêmicos, senha e backup", icon: UserRound },
+    { to: "/configuracoes", label: "Configurações", hint: "Temas, fonte e acessibilidade", icon: Settings },
+  ] },
 ];
 
 export function MorePage() {
@@ -16,46 +24,32 @@ export function MorePage() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div className="topbar">
-        <div className="topbar__title">Mais</div>
+    <div className="stack">
+      <PageHeader eyebrow="Menu" title="Mais">
         <SyncBadge />
-      </div>
+      </PageHeader>
 
-      <div className="card" style={{ padding: 8 }}>
-        {ITEMS.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "14px 10px",
-              textDecoration: "none",
-              color: "var(--color-text)",
-              borderBottom: "1px solid var(--color-border)",
-            }}
-          >
-            <item.icon size={18} />
-            <span style={{ flex: 1, fontWeight: 600, fontSize: 14 }}>{item.label}</span>
-            <ChevronRight size={16} color="var(--color-text-muted)" />
-          </Link>
-        ))}
-      </div>
+      {GROUPS.map((g) => (
+        <section key={g.label} aria-label={g.label}>
+          <div className="eyebrow" style={{ margin: "0 4px 8px" }}>{g.label}</div>
+          <div className="card card--flush">
+            {g.items.map((item) => (
+              <Link key={item.to} to={item.to} className="menu-row">
+                <span className="menu-row__icon"><item.icon size={17} strokeWidth={1.7} aria-hidden /></span>
+                <span className="menu-row__text">{item.label}<span className="menu-row__hint">{item.hint}</span></span>
+                <ChevronRight size={16} color="var(--color-text-muted)" aria-hidden />
+              </Link>
+            ))}
+          </div>
+        </section>
+      ))}
 
-      <div className="card">
-        <div className="text-muted" style={{ fontSize: 13 }}>Conectado como</div>
-        <div style={{ fontWeight: 600 }}>{user?.email}</div>
-      </div>
+      <section className="card">
+        <div className="eyebrow">Conectado como</div>
+        <div style={{ fontWeight: 500, marginTop: 4, overflowWrap: "anywhere" }}>{user?.email}</div>
+      </section>
 
-      <button
-        className="btn btn--danger btn--block"
-        onClick={async () => {
-          await signOut();
-          navigate("/login", { replace: true });
-        }}
-      >
+      <button className="btn btn--danger btn--block" onClick={async () => { await signOut(); navigate("/login", { replace: true }); }}>
         <LogOut size={16} /> Sair da conta
       </button>
     </div>

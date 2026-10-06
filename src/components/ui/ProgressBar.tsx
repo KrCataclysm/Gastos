@@ -1,9 +1,11 @@
-export function ProgressBar({ pct, color }: { pct: number; color?: string }) {
-  const clamped = Math.max(0, Math.min(1, pct));
-  const tone = color ?? (pct >= 1 ? "var(--color-expense)" : pct >= 0.8 ? "var(--color-warning)" : "var(--color-accent)");
+import { Ruler } from "@/components/ui/Ruler";
+
+/** Compatibilidade: telas antigas continuam usando <ProgressBar pct />, agora desenhado como régua. */
+export function ProgressBar({ pct, color, marker }: { pct: number; color?: string; marker?: number | null }) {
+  const tone = color ? undefined : pct >= 1 ? "over" : pct >= 0.8 ? "warn" : "ok";
   return (
-    <div className="progress">
-      <div className="progress__fill" style={{ width: `${clamped * 100}%`, background: tone }} />
+    <div style={color ? ({ ["--ruler-tone" as string]: color } as React.CSSProperties) : undefined}>
+      <Ruler value={pct} marker={marker} tone={tone} label="Progresso" />
     </div>
   );
 }

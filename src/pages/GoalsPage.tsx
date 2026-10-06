@@ -3,11 +3,14 @@ import { Plus, Target, Trash2 } from "lucide-react";
 import { useData } from "@/contexts/DataContext";
 import { useToast } from "@/components/ui/Toast";
 import { GoalForm } from "@/components/goals/GoalForm";
-import { ProgressBar } from "@/components/ui/ProgressBar";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { getIcon } from "@/components/ui/icons";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Ruler } from "@/components/ui/Ruler";
 import { formatCurrency, formatDateLong, formatPercent } from "@/lib/format";
+import { goalPace, PACE_LABEL, PACE_TONE } from "@/lib/pace";
 import type { Goal } from "@/types";
+
+const BADGE = { ok: "badge--income", warn: "badge--warning", off: "badge--expense", over: "badge--expense", done: "badge--income" } as const;
 
 export function GoalsPage() {
   const { goals, saveGoal, removeGoal } = useData();
@@ -33,62 +36,48 @@ export function GoalsPage() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div className="topbar">
-        <div className="topbar__title">Metas</div>
-        <button className="btn btn--primary btn--sm" onClick={() => setShowNew(true)}>
-          <Plus size={16} /> Nova meta
-        </button>
-      </div>
+    <div className="stack">
+      <PageHeader eyebrow="Objetivos" title="Metas">
+        <button className="btn btn--primary btn--sm" onClick={() => setShowNew(true)}><Plus size={15} /> Nova meta</button>
+      </PageHeader>
 
       {goals.length === 0 ? (
-        <EmptyState
-          icon={Target}
-          title="Nenhuma meta ainda"
-          description="Crie metas de economia (reserva, viagem, compra) e acompanhe o progresso."
-        />
+        <section className="card"><EmptyState icon={Target} title="Nenhuma meta ainda" description="Crie metas de economia (reserva, viagem, notebook) e acompanhe se você está no prumo do prazo." /></section>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div className="grid grid--2">
           {goals.map((goal) => {
-            const Icon = getIcon(goal.icon);
             const pct = goal.target_amount > 0 ? goal.current_amount / goal.target_amount : 0;
-            const done = pct >= 1;
+            const pace = goalPace(goal);
             return (
-              <div key={goal.id} className="card">
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                  <div className="panel-alt" style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", color: goal.color }}>
-                    <Icon size={18} />
+              <section key={goal.id} className="card" aria-label={goal.name}>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <h2 style={{ fontSize: "1.05rem", fontWeight: 600 }}>{goal.name}</h2>
+                      <span className={`badge ${BADGE[pace.status]}`}>{PACE_LABEL[pace.status]}</span>
+                    </div>
+                    <div className="eyebrow" style={{ marginTop: 6 }}>{goal.target_date ? `Até ${formatDateLong(goal.target_date)}` : "Sem prazo"}</div>
                   </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 700, fontSize: 15 }}>{goal.name}</div>
-                    {goal.target_date && (
-                      <div className="text-muted" style={{ fontSize: 12 }}>Até {formatDateLong(goal.target_date)}</div>
-                    )}
-                  </div>
-                  {done && <span className="badge badge--income">Concluída</span>}
-                  <button className="btn btn--ghost btn--icon" onClick={() => handleDelete(goal.id)} aria-label="Remover meta">
-                    <Trash2 size={16} />
-                  </button>
+                  <button className="btn btn--ghost btn--icon btn--sm" onClick={() => handleDelete(goal.id)} aria-label={`Remover meta ${goal.name}`}><Trash2 size={15} /></button>
                 </div>
 
-                <ProgressBar pct={pct} color={done ? "var(--color-income)" : undefined} />
-
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
-                  <span className="text-muted mono" style={{ fontSize: 13 }}>
-                    {formatCurrency(goal.current_amount)} / {formatCurrency(goal.target_amount)} · {formatPercent(pct)}
-                  </span>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <button className="btn btn--secondary btn--sm" onClick={() => setEditing(goal)}>
-                      Editar
-                    </button>
-                    {!done && (
-                      <button className="btn btn--primary btn--sm" onClick={() => setAddingTo(goal)}>
-                        Adicionar
-                      </button>
-                    )}
-                  </div>
+                <div className="mono" style={{ fontSize: "1.45rem", fontWeight: 500, letterSpacing: "-0.02em", margin: "16px 0 4px" }}>
+                  {formatCurrency(goal.current_amount)} <span className="text-muted" style={{ fontSize: "0.9rem" }}>/ {formatCurrency(goal.target_amount)}</span>
                 </div>
-              </div>
+                <Ruler value={pct} marker={goal.target_date && pace.status !== "done" ? pace.fractionOfTime : null} status={pace.status} label={`Progresso da meta ${goal.name}`} />
+                <div className="mono text-muted" style={{ fontSize: 12.5, marginTop: 4 }}>{formatPercent(pct)} concluído{goal.target_date && pace.status !== "done" ? ` · ${formatPercent(pace.fractionOfTime)} do prazo` : ""}</div>
+
+                {pace.status !== "done" && pace.perMonth != null && (
+                  <p style={{ fontSize: 13.5, margin: "12px 0 0", lineHeight: 1.5 }}>
+                    {pace.monthsLeft === 0 ? <>Prazo vencido. Faltam <b className="mono">{formatCurrency(pace.perMonth)}</b>.</> : <>Guarde <b className="mono">{formatCurrency(pace.perMonth)}</b> por mês durante {pace.monthsLeft} {pace.monthsLeft === 1 ? "mês" : "meses"} para chegar no prazo.</>}
+                  </p>
+                )}
+
+                <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+                  <button className="btn btn--secondary btn--sm" onClick={() => setEditing(goal)}>Editar</button>
+                  {pace.status !== "done" && <button className="btn btn--primary btn--sm" onClick={() => setAddingTo(goal)}>Guardar valor</button>}
+                </div>
+              </section>
             );
           })}
         </div>
@@ -99,16 +88,14 @@ export function GoalsPage() {
 
       {addingTo && (
         <div className="overlay" onClick={() => setAddingTo(null)}>
-          <div className="sheet" onClick={(e) => e.stopPropagation()}>
-            <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 18 }}>Adicionar a "{addingTo.name}"</h2>
+          <div className="sheet" role="dialog" aria-label={`Guardar em ${addingTo.name}`} onClick={(e) => e.stopPropagation()}>
+            <h2 style={{ fontSize: "1.15rem", marginBottom: 18 }}>Guardar em “{addingTo.name}”</h2>
             <div className="auth-form">
               <div className="field">
-                <label>Valor</label>
-                <input className="input" inputMode="decimal" autoFocus value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0,00" />
+                <label htmlFor="goal-amount">Valor</label>
+                <input id="goal-amount" className="input mono" inputMode="decimal" autoFocus value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0,00" />
               </div>
-              <button className="btn btn--primary btn--block" onClick={handleAddAmount}>
-                Confirmar
-              </button>
+              <button className="btn btn--primary btn--block" onClick={handleAddAmount}>Confirmar</button>
             </div>
           </div>
         </div>

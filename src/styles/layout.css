@@ -1,67 +1,79 @@
-.app-shell {
-  display: flex;
-  min-height: 100vh;
-  min-height: 100dvh;
-}
+/* ---------- Estrutura ---------- */
+.app-shell { display: flex; min-height: 100vh; min-height: 100dvh; }
 
 .app-main {
   flex: 1;
   min-width: 0;
-  padding: 20px 16px calc(96px + env(safe-area-inset-bottom));
-  max-width: 920px;
-  margin: 0 auto;
   width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 16px calc(92px + env(safe-area-inset-bottom));
+}
+@media (min-width: 960px) { .app-main { padding: 44px 48px 72px; } }
+
+.stack { display: flex; flex-direction: column; gap: 20px; }
+.grid { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) {
+  .grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid--7-5 { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
 }
 
+/* ---------- Cabeçalho de página ---------- */
+.topbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+.topbar__eyebrow { margin-bottom: 6px; }
+.topbar__title { font-size: 1.7rem; font-weight: 600; letter-spacing: -0.025em; line-height: 1.15; }
+.topbar__actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ---------- Navegação: barra lateral ---------- */
+.sidebar { display: none; }
 @media (min-width: 960px) {
-  .app-main {
-    padding: 32px 40px 40px;
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 252px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    background: var(--color-panel);
+    border-right: 1px solid var(--color-border);
+    padding: 24px 16px;
   }
+  .sidebar__brand { display: flex; align-items: center; gap: 11px; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; padding: 2px 10px 26px; }
+  .sidebar__group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 20px; }
+  .sidebar__label { padding: 0 10px 8px; }
+  .sidebar__foot { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--color-border); display: flex; flex-direction: column; gap: 10px; }
+  .sidebar .nav-item {
+    position: relative;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: var(--color-radius-sm);
+  }
+  .sidebar .nav-item:hover { background: var(--color-panel-alt); color: var(--color-text); }
+  .sidebar .nav-item.active { background: var(--color-accent-soft); color: var(--color-text); font-weight: 600; }
+  /* Linha de prumo: filete vertical no item ativo. */
+  .sidebar .nav-item.active::before { content: ""; position: absolute; left: -16px; top: 5px; bottom: 5px; width: 3px; border-radius: 0 3px 3px 0; background: var(--color-accent); }
+  .sidebar .nav-item.active svg { color: var(--color-accent-strong); }
 }
 
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.topbar__title {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.topbar__actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
+/* ---------- Navegação: barra inferior (celular) ---------- */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  inset: auto 0 0 0;
+  z-index: 50;
   display: flex;
   background: var(--color-panel);
   border-top: 1px solid var(--color-border);
-  padding: 8px 2px calc(8px + env(safe-area-inset-bottom));
-  z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom);
 }
-
-@media (min-width: 960px) {
-  .bottom-nav {
-    display: none;
-  }
-}
-
-.bottom-nav .nav-item {
-  flex: 1 1 0;
-  min-width: 0;
-  padding: 6px 2px;
-}
+@media (min-width: 960px) { .bottom-nav { display: none; } }
 
 .nav-item {
   display: flex;
@@ -69,137 +81,51 @@
   align-items: center;
   gap: 3px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text-muted);
-  padding: 6px 10px;
-  border-radius: 12px;
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: color 0.15s ease, background 0.15s ease;
 }
+.bottom-nav .nav-item { position: relative; flex: 1 1 0; min-width: 0; padding: 9px 2px 8px; }
+.bottom-nav .nav-item__label { align-self: stretch; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bottom-nav .nav-item.active { color: var(--color-text); font-weight: 600; }
+.bottom-nav .nav-item.active::before { content: ""; position: absolute; top: -1px; left: 28%; right: 28%; height: 2px; background: var(--color-accent); }
+.bottom-nav .nav-item.active svg { color: var(--color-accent-strong); }
 
-.bottom-nav .nav-item__label {
-  align-self: stretch;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (max-width: 400px) {
-  .bottom-nav .nav-item {
-    font-size: 9.5px;
-  }
-}
-
-.nav-item.active {
-  color: var(--color-accent-strong);
-}
-
-.sidebar {
-  display: none;
-}
-
-@media (min-width: 960px) {
-  .sidebar {
-    display: flex;
-    flex-direction: column;
-    width: 240px;
-    flex-shrink: 0;
-    background: var(--color-panel);
-    border-right: 1px solid var(--color-border);
-    padding: 24px 16px;
-    gap: 4px;
-  }
-
-  .sidebar__brand {
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    padding: 0 12px 24px;
-  }
-
-  .sidebar .nav-item {
-    flex-direction: row;
-    justify-content: flex-start;
-    font-size: 14px;
-    padding: 10px 12px;
-    width: 100%;
-  }
-
-  .sidebar .nav-item.active {
-    background: var(--color-accent-soft);
-  }
-}
-
+/* ---------- Ação principal ---------- */
 .fab {
   position: fixed;
-  right: 20px;
-  bottom: calc(78px + env(safe-area-inset-bottom));
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
-  color: var(--color-on-accent, white);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
+  right: 16px;
+  bottom: calc(74px + env(safe-area-inset-bottom));
   z-index: 60;
-  transition: transform 0.15s ease;
-}
-
-.fab:active {
-  transform: scale(0.92);
-}
-
-@media (min-width: 960px) {
-  .fab {
-    right: 40px;
-    bottom: 40px;
-  }
-}
-
-.install-banner {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  background: linear-gradient(135deg, var(--color-accent-soft), transparent);
-  border: 1px solid var(--color-accent);
+  gap: 8px;
+  height: 46px;
+  padding: 0 18px 0 14px;
+  border: 0;
   border-radius: var(--color-radius);
-  padding: 14px 16px;
-  margin-bottom: 20px;
-}
-
-@media print {
-  .bottom-nav,
-  .sidebar,
-  .fab,
-  .install-banner,
-  .no-print {
-    display: none !important;
-  }
-
-  .app-main {
-    max-width: none;
-    padding: 0;
-  }
-
-  body {
-    background: white;
-    color: black;
-  }
-}
-
-.install-banner__icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
   background: var(--color-accent);
-  color: var(--color-on-accent, white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  color: var(--color-on-accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.fab:hover { background: var(--color-accent-strong); }
+.fab:active { transform: translateY(1px); }
+@media (min-width: 960px) { .fab { right: 48px; bottom: 40px; } }
+
+/* ---------- Faixa de instalação ---------- */
+.install-banner { display: flex; align-items: center; gap: 12px; background: var(--color-panel); border: 1px solid var(--color-border); border-left: 3px solid var(--color-accent); border-radius: var(--color-radius); padding: 12px 16px; margin-bottom: 20px; }
+.install-banner__icon { width: 36px; height: 36px; border-radius: var(--color-radius-sm); background: var(--color-accent); color: var(--color-on-accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* ---------- Impressão (relatório em PDF) ---------- */
+@media print {
+  .bottom-nav, .sidebar, .fab, .install-banner, .no-print { display: none !important; }
+  .app-main { max-width: none; padding: 0; }
+  body { background: white; color: black; }
+  .card { break-inside: avoid; }
 }

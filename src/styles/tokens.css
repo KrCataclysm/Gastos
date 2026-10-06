@@ -1,75 +1,103 @@
+/*
+ * Prumo · tokens de design.
+ * Papel quente + tinta esverdeada + verde-petróleo. Cores de dinheiro são terrosas (verde-musgo e terracota),
+ * nunca verde/vermelho "semáforo". Tema claro é o padrão; o noturno vale por escolha ou pelo aparelho.
+ */
 :root {
-  --color-bg: #0d1120;
-  --color-panel: #151b30;
-  --color-panel-alt: #1b2340;
-  --color-border: #262f4d;
-  --color-text: #f1f3fb;
-  --color-text-muted: #93a0c2;
+  --color-bg: #f3f1eb;
+  --color-panel: #ffffff;
+  --color-panel-alt: #ece9e1;
+  --color-border: #d6d2c7;
+  --color-text: #15211d;
+  --color-text-muted: #56635d;
 
-  --color-accent: #6366f1;
-  --color-accent-strong: #818cf8;
-  --color-accent-soft: rgba(99, 102, 241, 0.16);
+  --color-accent: #0e6b62;
+  --color-accent-strong: #0a5048;
+  --color-accent-soft: rgba(14, 107, 98, 0.1);
+  --color-on-accent: #ffffff;
 
-  --color-income: #22c55e;
-  --color-income-soft: rgba(34, 197, 94, 0.14);
-  --color-expense: #f43f5e;
-  --color-expense-soft: rgba(244, 63, 94, 0.14);
-  --color-warning: #f59e0b;
-  --color-warning-soft: rgba(245, 158, 11, 0.16);
-  --color-info: #22d3ee;
-  --color-info-soft: rgba(34, 211, 238, 0.14);
+  --color-income: #2a7a46;
+  --color-income-soft: rgba(42, 122, 70, 0.11);
+  --color-expense: #b1432a;
+  --color-expense-soft: rgba(177, 67, 42, 0.1);
+  --color-warning: #9a5a06;
+  --color-warning-soft: rgba(154, 90, 6, 0.12);
+  --color-info: #1d6c87;
+  --color-info-soft: rgba(29, 108, 135, 0.1);
 
-  --color-radius: 16px;
-  --color-radius-sm: 10px;
-  --color-radius-lg: 22px;
+  --chart-muted: #bdb8aa;
 
-  --font-family: "Inter", system-ui, sans-serif;
+  --color-radius: 10px;
+  --color-radius-sm: 7px;
+  --color-radius-lg: 14px;
 
-  --chart-muted: #3a4566;
+  --font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24);
-  --shadow-md: 0 8px 24px rgba(4, 6, 20, 0.36);
-  --shadow-lg: 0 20px 48px rgba(4, 6, 20, 0.5);
+  /* Sombras quase inexistentes: hierarquia vem de bordas e espaçamento, não de brilho. */
+  --shadow-sm: none;
+  --shadow-md: 0 6px 18px rgba(21, 33, 29, 0.12);
+  --shadow-lg: 0 18px 44px rgba(21, 33, 29, 0.18);
 
-  --toast-bg: #1b2340;
-  --toast-text: #f1f3fb;
-  --toast-success: #22c55e;
-  --toast-error: #f43f5e;
-  --toast-warning: #f59e0b;
-  --toast-info: #22d3ee;
+  --toast-bg: #15211d;
+  --toast-text: #f3f1eb;
+  --toast-success: #5fc486;
+  --toast-error: #ef8a70;
+  --toast-warning: #e9b45a;
+  --toast-info: #6cc0dc;
 
+  --ui-scale: 1;
+  color-scheme: light;
+}
+
+:root[data-mode="dark"] {
+  --color-bg: #0d1311;
+  --color-panel: #141c19;
+  --color-panel-alt: #1b2521;
+  --color-border: #2a3731;
+  --color-text: #e8eeea;
+  --color-text-muted: #9fada6;
+
+  --color-accent: #4fc3ae;
+  --color-accent-strong: #7ad8c6;
+  --color-accent-soft: rgba(79, 195, 174, 0.14);
+  --color-on-accent: #06201b;
+
+  --color-income: #6ccb8a;
+  --color-income-soft: rgba(108, 203, 138, 0.13);
+  --color-expense: #f0866a;
+  --color-expense-soft: rgba(240, 134, 106, 0.13);
+  --color-warning: #e9b45a;
+  --color-warning-soft: rgba(233, 180, 90, 0.14);
+  --color-info: #6cc0dc;
+  --color-info-soft: rgba(108, 192, 220, 0.13);
+
+  --chart-muted: #3b4943;
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.55);
+  --toast-bg: #e8eeea;
+  --toast-text: #0d1311;
   color-scheme: dark;
 }
 
-:root[data-mode="light"] {
-  --color-bg: #f3f5fb;
-  --color-panel: #ffffff;
-  --color-panel-alt: #edf0f9;
-  --color-border: #dde3f0;
-  --color-text: #12172b;
-  --color-text-muted: #5b6684;
-
-  --color-accent: #4f46e5;
-  --color-accent-strong: #6366f1;
-  --color-accent-soft: rgba(79, 70, 229, 0.1);
-
-  --color-income: #15803d;
-  --color-income-soft: rgba(21, 128, 61, 0.1);
-  --color-expense: #be123c;
-  --color-expense-soft: rgba(190, 18, 60, 0.1);
-  --color-warning: #b45309;
-  --color-warning-soft: rgba(180, 83, 9, 0.12);
-  --color-info: #0e7490;
-  --color-info-soft: rgba(14, 116, 144, 0.1);
-
-  --chart-muted: #b9c2d8;
-
-  --shadow-sm: 0 1px 2px rgba(20, 24, 50, 0.06);
-  --shadow-md: 0 8px 24px rgba(20, 24, 50, 0.08);
-  --shadow-lg: 0 20px 48px rgba(20, 24, 50, 0.12);
-
-  --toast-bg: #12172b;
-  --toast-text: #f8f9fd;
-
-  color-scheme: light;
+/* Primeira visita (sem tema salvo): respeita o aparelho antes de o app carregar. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode]) {
+    --color-bg: #0d1311;
+    --color-panel: #141c19;
+    --color-panel-alt: #1b2521;
+    --color-border: #2a3731;
+    --color-text: #e8eeea;
+    --color-text-muted: #9fada6;
+    --color-accent: #4fc3ae;
+    --color-accent-strong: #7ad8c6;
+    --color-accent-soft: rgba(79, 195, 174, 0.14);
+    --color-on-accent: #06201b;
+    --color-income: #6ccb8a;
+    --color-income-soft: rgba(108, 203, 138, 0.13);
+    --color-expense: #f0866a;
+    --color-expense-soft: rgba(240, 134, 106, 0.13);
+    --chart-muted: #3b4943;
+    color-scheme: dark;
+  }
 }

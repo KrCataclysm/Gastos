@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PageHeader } from "@/components/ui/PageHeader";
 import {
   ArrowLeft,
   BarChart3,
@@ -159,32 +160,22 @@ export function ToolsPage() {
 
   if (active) {
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <div className="topbar">
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <button className="btn btn--ghost btn--icon" onClick={() => setActiveId(null)} aria-label="Voltar">
-              <ArrowLeft size={18} />
-            </button>
-            <div>
-              <div className="topbar__title" style={{ fontSize: 18 }}>{active.label}</div>
-              <div className="text-muted" style={{ fontSize: 12 }}>{active.description}</div>
-            </div>
-          </div>
-        </div>
-        {active.render()}
+      <div className="stack">
+        <PageHeader eyebrow={active.description} title={active.label}>
+          <button className="btn btn--secondary btn--sm" onClick={() => setActiveId(null)}><ArrowLeft size={15} /> Ferramentas</button>
+        </PageHeader>
+        <section className="card">{active.render()}</section>
       </div>
     );
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div className="topbar">
-        <div className="topbar__title">Ferramentas</div>
-      </div>
-      <div className="text-muted" style={{ fontSize: 13, marginTop: -8 }}>
+    <div className="stack">
+      <PageHeader eyebrow="Gestão da Qualidade" title="Ferramentas" />
+      <p className="text-muted" style={{ fontSize: 14, marginTop: -8, maxWidth: "62ch", lineHeight: 1.55 }}>
         Métodos de produtividade e gestão para organizar tarefas, processos e decisões.
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+      </p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 14 }}>
         {TOOLS.map((tool) => (
           <button
             key={tool.id}
@@ -192,11 +183,9 @@ export function ToolsPage() {
             style={{ textAlign: "left", cursor: "pointer", display: "flex", flexDirection: "column", gap: 10 }}
             onClick={() => setActiveId(tool.id)}
           >
-            <div className="panel-alt" style={{ width: 38, height: 38, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-accent-strong)" }}>
-              <tool.icon size={18} />
-            </div>
-            <div style={{ fontWeight: 700, fontSize: 14 }}>{tool.label}</div>
-            <div className="text-muted" style={{ fontSize: 12 }}>{tool.description}</div>
+            <span className="menu-row__icon" style={{ color: "var(--color-accent-strong)" }}><tool.icon size={17} strokeWidth={1.7} aria-hidden /></span>
+            <div style={{ fontWeight: 600, fontSize: 14.5 }}>{tool.label}</div>
+            <div className="text-muted" style={{ fontSize: 12.5, lineHeight: 1.5 }}>{tool.description}</div>
           </button>
         ))}
       </div>

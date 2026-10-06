@@ -31,7 +31,7 @@ export function QualityTools({ transactions, categories, start, end, label }: Pr
   return (
     <>
       <div className="card">
-        <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Pareto das despesas · {label}</h3>
+        <h3 className="panel-title" style={{ marginBottom: 12 }}>Pareto das despesas · {label}</h3>
         <div className="callout">
           <Info size={16} aria-hidden style={{ flex: "none", marginTop: 2 }} />
           <div>
@@ -66,7 +66,7 @@ export function QualityTools({ transactions, categories, start, end, label }: Pr
 
       <div className="card">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 8 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700 }}>Diagrama de Ishikawa · {label}</h3>
+          <h3 className="panel-title">Diagrama de Ishikawa · {label}</h3>
           <div className="seg no-print" style={{ width: 190 }} role="group" aria-label="Modo de exibição">
             <button type="button" aria-pressed={view === "diagram"} onClick={() => setView("diagram")}>Diagrama</button>
             <button type="button" aria-pressed={view === "list"} onClick={() => setView("list")}>Lista</button>

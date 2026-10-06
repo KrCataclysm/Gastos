@@ -66,3 +66,11 @@ export function firstTwoNames(fullName: string | null | undefined): string {
   const parts = fullName.trim().split(/\s+/).filter(Boolean);
   return parts.slice(0, 2).join(" ");
 }
+
+/** "sex · 09 out": cabeçalho de dia no extrato (a caixa-alta vem do CSS). */
+export function formatDayHeader(iso: string): string {
+  const d = new Date(iso + "T00:00:00");
+  const wd = d.toLocaleDateString("pt-BR", { weekday: "short" }).replace(".", "");
+  const dm = d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }).replace(".", "").replace(" de ", " ");
+  return `${wd} · ${dm}`;
+}

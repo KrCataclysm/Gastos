@@ -25,6 +25,7 @@ import type {
   Tag,
   Transaction,
 } from "@/types";
+import { DEFAULT_COLOR } from "@/lib/palette";
 
 function nowIso() {
   return new Date().toISOString();
@@ -147,7 +148,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         name: input.name ?? existing?.name ?? "Conta",
         type: input.type ?? existing?.type ?? "checking",
         initial_balance: input.initial_balance ?? existing?.initial_balance ?? 0,
-        color: input.color ?? existing?.color ?? "#6366f1",
+        color: input.color ?? existing?.color ?? DEFAULT_COLOR,
         icon: input.icon ?? existing?.icon ?? "wallet",
         credit_limit: input.credit_limit ?? existing?.credit_limit ?? null,
         closing_day: input.closing_day ?? existing?.closing_day ?? null,
@@ -195,7 +196,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         name: input.name ?? existing?.name ?? "Categoria",
         kind: input.kind ?? existing?.kind ?? "expense",
         nature: input.nature ?? existing?.nature ?? "variable",
-        color: input.color ?? existing?.color ?? "#6366f1",
+        color: input.color ?? existing?.color ?? DEFAULT_COLOR,
         icon: input.icon ?? existing?.icon ?? "tag",
         monthly_budget: input.monthly_budget !== undefined ? input.monthly_budget : existing?.monthly_budget ?? null,
         archived_at: input.archived_at ?? existing?.archived_at ?? null,
@@ -231,7 +232,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         user_id: user.id,
         profile_id: spendingProfile.id,
         name: input.name ?? existing?.name ?? "tag",
-        color: input.color ?? existing?.color ?? "#6366f1",
+        color: input.color ?? existing?.color ?? DEFAULT_COLOR,
         deleted_at: null,
         created_at: existing?.created_at ?? nowIso(),
         updated_at: nowIso(),
@@ -348,7 +349,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         profile_id: spendingProfile.id,
         name: input.name ?? existing?.name ?? "Meta",
         icon: input.icon ?? existing?.icon ?? "piggy-bank",
-        color: input.color ?? existing?.color ?? "#6366f1",
+        color: input.color ?? existing?.color ?? DEFAULT_COLOR,
         target_amount: input.target_amount ?? existing?.target_amount ?? 0,
         current_amount: input.current_amount ?? existing?.current_amount ?? 0,
         target_date: input.target_date !== undefined ? input.target_date : existing?.target_date ?? null,

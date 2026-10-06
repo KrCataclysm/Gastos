@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { normalizeHex } from "@/lib/contrast";
+import { DEFAULT_COLOR } from "@/lib/palette";
 
 export interface AvatarPrefs {
   emoji: string;
@@ -7,7 +8,7 @@ export interface AvatarPrefs {
 }
 
 const KEY = "gastos:avatar";
-const DEFAULT: AvatarPrefs = { emoji: "", color: "#6366f1" };
+const DEFAULT: AvatarPrefs = { emoji: "", color: DEFAULT_COLOR };
 const listeners = new Set<() => void>();
 let cache: AvatarPrefs | null = null;
 
