@@ -41,15 +41,15 @@ export function ParetoChart({ items }: { items: ParetoItem[] }) {
       <text x={W - M.right + 6} y={yPct(0.8) + 4} fontSize={11} fontWeight={700} style={{ fill: "var(--color-warning)" }}>80%</text>
       {data.map((d, i) => (
         <g key={d.id}>
-          <rect x={x(i) - bw / 2} y={yVal(d.total)} width={bw} height={Math.max(1, M.top + ph - yVal(d.total))} rx={4} fill={d.vital ? "var(--color-accent)" : "var(--chart-muted)"}>
+          <rect className="bar" style={{ ["--i" as string]: i }} x={x(i) - bw / 2} y={yVal(d.total)} width={bw} height={Math.max(1, M.top + ph - yVal(d.total))} rx={4} fill={d.vital ? "var(--color-accent)" : "var(--chart-muted)"}>
             <title>{`${d.name}: ${formatBRL(d.total)} (${formatPercent(d.share)}, acumulado ${formatPercent(d.cumulative)})`}</title>
           </rect>
           <text x={x(i)} y={yVal(d.total) - 6} textAnchor="middle" fontSize={11} fontWeight={600}>{formatPercent(d.share)}</text>
           <text className="axis" transform={`translate(${x(i)},${H - M.bottom + 14}) rotate(-35)`} textAnchor="end">{clip(d.name, 16)}</text>
         </g>
       ))}
-      <path d={line} fill="none" stroke="var(--color-text)" strokeWidth={2} />
-      {data.map((d, i) => <circle key={d.id} cx={x(i)} cy={yPct(d.cumulative)} r={3.5} style={{ fill: "var(--color-panel)", stroke: "var(--color-text)" }} strokeWidth={2} />)}
+      <path className="draw" pathLength={1} style={{ ["--i" as string]: data.length * 0.6 }} d={line} fill="none" stroke="var(--color-text)" strokeWidth={2} />
+      {data.map((d, i) => <circle className="pop" style={{ fill: "var(--color-panel)", stroke: "var(--color-text)", ["--i" as string]: i }} key={d.id} cx={x(i)} cy={yPct(d.cumulative)} r={3.5} strokeWidth={2} />)}
     </svg>
   );
 }

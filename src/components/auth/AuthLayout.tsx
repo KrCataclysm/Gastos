@@ -19,15 +19,43 @@ function PlumbArt() {
         </pattern>
       </defs>
       <rect width="120" height="100%" fill="url(#auth-ticks)" />
-      <line x1="30" y1="0" x2="30" y2="62%" stroke="currentColor" strokeWidth="1.25" opacity="0.7" />
-      <circle cx="30" cy="62%" r="7" fill="currentColor" />
+      <g className="plumb-swing">
+        <line className="plumb-line" pathLength={1} x1="30" y1="0" x2="30" y2="62%" stroke="currentColor" strokeWidth="1.25" opacity="0.7" />
+        <circle className="plumb-bob" cx="30" cy="62%" r="7" fill="currentColor" />
+      </g>
     </svg>
+  );
+}
+
+/** Faixa de abertura no celular: marca, frase e o fio de prumo balançando ao lado de uma régua. */
+function MobileHero() {
+  return (
+    <div className="auth-mobile-hero" aria-hidden>
+      <svg className="auth-mobile-hero__art" viewBox="0 0 120 200" preserveAspectRatio="xMaxYMin slice" focusable="false">
+        <defs>
+          <pattern id="m-ticks" width="120" height="16" patternUnits="userSpaceOnUse">
+            <line x1="92" y1="0" x2="112" y2="0" stroke="currentColor" strokeWidth="1" opacity="0.3" />
+            <line x1="102" y1="8" x2="112" y2="8" stroke="currentColor" strokeWidth="1" opacity="0.18" />
+          </pattern>
+        </defs>
+        <rect width="120" height="200" fill="url(#m-ticks)" />
+        <g className="plumb-swing">
+          <line className="plumb-line" pathLength={1} x1="62" y1="0" x2="62" y2="150" stroke="currentColor" strokeWidth="1.25" opacity="0.75" />
+          <circle className="plumb-bob" cx="62" cy="150" r="7" fill="currentColor" />
+        </g>
+      </svg>
+    </div>
   );
 }
 
 export function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="auth-screen">
+      <div className="auth-mobile-top">
+        <MobileHero />
+        <div className="auth-mobile-top__brand"><Logo size={34} />{BRAND.name}</div>
+        <p className="auth-mobile-top__tag">{BRAND.tagline}</p>
+      </div>
       <div className="auth-hero">
         <PlumbArt />
         <div className="auth-hero__brand"><Logo size={36} />{BRAND.name}</div>
@@ -39,7 +67,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
 
         <ol className="auth-hero__list" aria-label="O que o app entrega">
           {POINTS.map((p, i) => (
-            <li key={p.title}>
+            <li key={p.title} style={{ ["--i" as string]: i }}>
               <span className="eyebrow">{String(i + 1).padStart(2, "0")}</span>
               <span><b>{p.title}</b><span>{p.text}</span></span>
             </li>
@@ -47,7 +75,14 @@ export function AuthLayout({ children }: { children: ReactNode }) {
         </ol>
       </div>
 
-      <div className="auth-panel">{children}</div>
+      <div className="auth-panel">
+        {children}
+        <ul className="auth-chips" aria-label="Diferenciais">
+          <li>Funciona offline</li>
+          <li>Dados só seus</li>
+          <li>Ferramentas da Qualidade</li>
+        </ul>
+      </div>
     </div>
   );
 }

@@ -47,6 +47,9 @@ export default defineConfig({
       workbox: {
         // Só a fonte padrão (IBM Plex) é pré-carregada para uso offline; as opcionais são cacheadas ao serem usadas.
         globPatterns: ["**/*.{js,css,html,png,svg,ico}", "assets/ibm-plex-*.woff2"],
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
         navigateFallback: `${base}index.html`,
         runtimeCaching: [
           {

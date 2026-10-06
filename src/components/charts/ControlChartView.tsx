@@ -24,10 +24,10 @@ export function ControlChartView({ values, labels, chart }: { values: number[]; 
           <text className="axis" x={M.left - 8} y={y(v as number) + 3.5} textAnchor="end">{name === "Média" ? formatCurrencyCompact(v as number) : `${name} ${formatCurrencyCompact(v as number)}`}</text>
         </g>
       ))}
-      <path d={path} fill="none" style={{ stroke: "var(--color-text-muted)" }} strokeWidth={1.5} />
+      <path className="draw" pathLength={1} d={path} fill="none" style={{ stroke: "var(--color-text-muted)" }} strokeWidth={1.5} />
       {values.map((v, i) => (
         <g key={labels[i]}>
-          <circle cx={x(i)} cy={y(v)} r={out.has(i) ? 5 : 3.5} style={{ fill: out.has(i) ? "var(--color-expense)" : run.has(i) ? "var(--color-warning, var(--color-expense))" : "var(--color-accent)" }}>
+          <circle className="pop" cx={x(i)} cy={y(v)} r={out.has(i) ? 5 : 3.5} style={{ ["--i" as string]: i * 0.7, fill: out.has(i) ? "var(--color-expense)" : run.has(i) ? "var(--color-warning, var(--color-expense))" : "var(--color-accent)" }}>
             <title>{`Semana de ${labels[i]}: ${formatCurrency(v)}${out.has(i) ? " (fora de controle)" : ""}`}</title>
           </circle>
           {i % step === 0 && <text className="axis" x={x(i)} y={H - 8} textAnchor="middle">{labels[i]}</text>}
