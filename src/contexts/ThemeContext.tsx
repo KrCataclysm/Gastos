@@ -260,8 +260,16 @@ async function ensureFont(key: FontChoice): Promise<void> {
   }
 }
 
+let firstApply = true;
+
 function applyTheme(theme: ThemeState) {
   const root = document.documentElement;
+  // Troca de tema suave (cores deslizam em vez de piscar); não na primeira pintura.
+  if (!firstApply && theme.a11y.reduceMotion !== true) {
+    root.classList.add("theme-anim");
+    window.setTimeout(() => root.classList.remove("theme-anim"), 450);
+  }
+  firstApply = false;
   const { vars, attrs } = themeVars(theme);
   for (const [k, v] of Object.entries(vars)) root.style.setProperty(k, v);
   for (const [k, v] of Object.entries(attrs)) root.setAttribute(k, v);

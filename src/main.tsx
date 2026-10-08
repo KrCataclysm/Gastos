@@ -2,9 +2,11 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { registerSW } from "virtual:pwa-register";
 import { App } from "@/App";
+import { installRipple } from "@/lib/ripple";
 import "@/styles/main.css";
 
 registerSW({ immediate: true });
+installRipple();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
