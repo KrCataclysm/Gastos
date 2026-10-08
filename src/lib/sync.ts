@@ -73,13 +73,16 @@ class SyncEngine {
       this.setStatus("offline");
       return;
     }
+    const userId = this.userId;
     this.syncing = true;
     this.setStatus("syncing");
     try {
       await this.flushQueue();
-      await this.pullAll();
+      await this.pullAll(userId);
       this.setStatus("idle");
     } catch (err) {
+      // Saiu da conta (ou trocou de usuário) no meio da sincronização: não é erro.
+      if (this.userId !== userId) return;
       console.error("[sync] falhou", err);
       this.setStatus(navigator.onLine ? "error" : "offline");
     } finally {
@@ -110,16 +113,17 @@ class SyncEngine {
     }
   }
 
-  private async pullAll() {
-    if (!this.userId) return;
+  private async pullAll(userId: string) {
     let changed = false;
     for (const table of SYNCABLE_TABLES) {
+      // dispose() zera userId; sem isso a consulta sairia com "user_id=eq.null" (HTTP 400).
+      if (this.userId !== userId) return;
       const watermarkKey = `pull:${table}`;
       const since = ((await getMeta(watermarkKey)) as string | undefined) ?? "1970-01-01T00:00:00Z";
       const { data, error } = await supabase
         .from(table)
         .select("*")
-        .eq("user_id", this.userId)
+        .eq("user_id", userId)
         .gt("updated_at", since)
         .order("updated_at", { ascending: true })
         .limit(2000);
@@ -134,6 +138,7 @@ class SyncEngine {
       }
     }
 
+    if (this.userId !== userId) return;
     const tagsWatermark = "pull:transaction_tags";
     const { data: tagRows, error: tagErr } = await supabase
       .from("transaction_tags")
