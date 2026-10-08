@@ -82,7 +82,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<ImprovementProject[]>([]);
   const [recurringTransactions, setRecurringTransactions] = useState<RecurringTransaction[]>([]);
 
-  const reload = useCallback(async () => {
+  const reload = useCallback(async (): Promise<boolean> => {
     const [sp, acc, cat, tg, txRaw, bud, goalsRaw, projRaw, rec] = await Promise.all([
       getAllLocal("spending_profiles"),
       getAllLocal("accounts"),
@@ -109,6 +109,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setGoals(goalsRaw.filter((g) => !g.deleted_at).sort((a, b) => a.name.localeCompare(b.name)));
     setProjects(projRaw.filter((p) => !p.deleted_at).sort((a, b) => b.updated_at.localeCompare(a.updated_at)));
     setRecurringTransactions(rec.filter((r) => !r.deleted_at));
+    return sp.length > 0;
   }, []);
 
   useEffect(() => {
@@ -117,7 +118,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
     const unsubStatus = syncEngine.subscribe(setSyncStatus);
     setLoading(true);
     (async () => {
-      await reload();
+      // Offline-first: com dados locais, mostra na hora e sincroniza em segundo plano.
+      // Só espera a rede no primeiro acesso do aparelho (sem nada salvo).
+      const hasLocal = await reload();
+      if (hasLocal && !disposed) setLoading(false);
       syncEngine.init(user.id, () => {
         if (!disposed) void reload();
       });

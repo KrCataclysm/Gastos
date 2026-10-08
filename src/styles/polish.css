@@ -130,3 +130,50 @@ body {
 @keyframes value-in { from { opacity: 0; transform: translateY(8px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
 @keyframes sweep { 0%, 55% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
 @keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(-50px, -30px) scale(1.15); } }
+
+/* ---------- Segunda rodada ---------- */
+.ripple { position: absolute; border-radius: 50%; pointer-events: none; background: currentColor; opacity: 0.18; transform: scale(0); animation: ripple 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+@keyframes ripple { to { transform: scale(1); opacity: 0; } }
+
+/* Troca de tema suave */
+:root.theme-anim, :root.theme-anim *, :root.theme-anim *::before, :root.theme-anim *::after { transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, fill 0.4s ease, box-shadow 0.4s ease !important; }
+
+/* Foco: anel limpo e consistente */
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; box-shadow: 0 0 0 5px var(--color-accent-soft); }
+
+/* Tabelas e listas */
+.data-table tbody tr { transition: background 0.18s ease; }
+.data-table tbody tr:hover { background: var(--color-panel-alt); }
+.data-table th { position: sticky; top: 0; background: var(--color-panel); }
+.menu-row { transition: background 0.18s ease, transform 0.18s ease; border-radius: var(--color-radius-sm); }
+.menu-row:hover { background: var(--color-panel-alt); }
+
+/* Cabeçalho de página: filete de acento que desenha */
+.topbar { position: relative; border-bottom-color: transparent; }
+.topbar::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: linear-gradient(90deg, var(--color-accent), var(--color-border) 22%, var(--color-border)); }
+
+/* Links: sublinhado que desliza */
+.link, .auth-footer-link a { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat; transition: background-size 0.3s ease; padding-bottom: 1px; }
+.link:hover, .auth-footer-link a:hover { text-decoration: none; background-size: 100% 1.5px; }
+
+/* Avatar e logo com vida */
+.avatar { transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.nav-item:hover .avatar { transform: scale(1.1) rotate(-4deg); }
+
+/* Campos: rótulo acende ao focar */
+.field:focus-within > label { color: var(--color-accent-strong); transition: color 0.2s ease; }
+.input, .select, .textarea { transition: border-color 0.2s ease, box-shadow 0.25s ease, background 0.2s ease; }
+.input:hover:not(:focus), .select:hover:not(:focus), .textarea:hover:not(:focus) { border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border)); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .topbar::after { transform-origin: left; animation: ruler-grow 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both; }
+  .data-table tbody tr { animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 25ms); }
+  .input-error { animation: shake 0.4s ease; }
+  .error-text { animation: rise 0.3s ease both; }
+  .kpi { transition: background 0.3s ease; }
+  .kpi:hover { background: var(--color-accent-soft); }
+  .badge--warning { animation: nudge 2.6s ease-in-out infinite; }
+  .install-banner { animation: rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s both; }
+}
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+@keyframes nudge { 0%, 85%, 100% { transform: translateX(0); } 90% { transform: translateX(2px); } 95% { transform: translateX(-2px); } }
