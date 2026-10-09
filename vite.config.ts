@@ -15,7 +15,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
       injectRegister: "auto",
       includeAssets: [
         "favicon.svg",
@@ -45,9 +45,10 @@ export default defineConfig({
         categories: ["finance", "productivity"],
       },
       workbox: {
-        // Só a fonte padrão (IBM Plex) é pré-carregada para uso offline; as opcionais são cacheadas ao serem usadas.
-        globPatterns: ["**/*.{js,css,html,png,svg,ico}", "assets/ibm-plex-*.woff2"],
-        skipWaiting: true,
+        // Só a fonte padrão (Plus Jakarta Sans + Inter nos números) é pré-carregada para uso offline; as opcionais são cacheadas ao serem usadas.
+        globPatterns: ["**/*.{js,css,html,png,svg,ico}", "assets/plus-jakarta-sans-latin-*.woff2", "assets/inter-latin-{500,600,700}-normal-*.woff2"],
+        // Versão nova espera o aviso "Atualizar" (sem recarregar a tela no meio de um lançamento).
+        skipWaiting: false,
         clientsClaim: true,
         cleanupOutdatedCaches: true,
         navigateFallback: `${base}index.html`,

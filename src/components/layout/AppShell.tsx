@@ -3,6 +3,7 @@ import { BarChart3, BookOpen, Flag, FolderKanban, Landmark, LayoutDashboard, Mor
 import { BRAND } from "@/brand";
 import { Logo } from "@/components/brand/Logo";
 import { InstallPrompt } from "@/components/layout/InstallPrompt";
+import { UpdateBanner } from "@/components/layout/UpdateBanner";
 import { SyncBadge } from "@/components/layout/SyncBadge";
 import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -70,6 +71,7 @@ export function AppShell() {
       </aside>
 
       <main className="app-main" id="conteudo" tabIndex={-1}>
+        <UpdateBanner />
         <InstallPrompt />
         {loading ? (
           <div className="stack">
