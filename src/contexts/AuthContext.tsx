@@ -5,6 +5,8 @@ import { clearAllLocal } from "@/lib/db";
 
 interface AuthResult {
   error?: string;
+  /** cadastro criado, mas ainda falta confirmar o e-mail (só quando o projeto exige confirmação) */
+  needsConfirmation?: boolean;
 }
 
 interface AuthContextValue {
@@ -57,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user: session?.user ?? null,
       loading,
       async signUp(email, password, displayName) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -65,7 +67,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             emailRedirectTo: `${redirectBase()}login`,
           },
         });
-        return error ? { error: translateError(error.message) } : {};
+        if (error) return { error: translateError(error.message) };
+        return { needsConfirmation: !data.session };
       },
       async signIn(email, password) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });

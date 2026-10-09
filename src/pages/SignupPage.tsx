@@ -32,7 +32,7 @@ export function SignupPage() {
     const result = await signUp(email, password, name);
     setLoading(false);
     if (result.error) setError(result.error);
-    else setSent(true);
+    else if (result.needsConfirmation) setSent(true);
   }
 
   if (sent) {
