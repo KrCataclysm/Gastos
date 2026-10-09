@@ -177,3 +177,10 @@ body {
 }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
 @keyframes nudge { 0%, 85%, 100% { transform: translateX(0); } 90% { transform: translateX(2px); } 95% { transform: translateX(-2px); } }
+
+/* Aviso de versão nova */
+.update-banner { position: sticky; top: 8px; z-index: 70; display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding: 10px 12px 10px 14px; border: 1px solid color-mix(in srgb, var(--color-accent) 40%, var(--color-border)); border-radius: var(--color-radius); background: color-mix(in srgb, var(--color-panel) 88%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: var(--shadow-md); font-size: 0.875rem; font-weight: 500; }
+.update-banner span { flex: 1; }
+.update-banner svg { color: var(--color-accent-strong); }
+@media (prefers-reduced-motion: no-preference) { .update-banner { animation: toast-in 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) both; } .update-banner svg { animation: spin-once 1.2s ease 0.4s; } }
+@keyframes spin-once { to { transform: rotate(360deg); } }
