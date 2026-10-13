@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronRight, BookOpen, FolderKanban, Flag, Landmark, LogOut, Settings, Tags, UserRound, Wrench, type LucideIcon } from "lucide-react";
+import { ChevronRight, BookOpen, FolderKanban, Flag, Landmark, LogOut, Settings, ShieldCheck, Tags, UserRound, Wrench, type LucideIcon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { SyncBadge } from "@/components/layout/SyncBadge";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -18,6 +18,7 @@ const GROUPS: { label: string; items: { to: string; label: string; hint: string;
   { label: "Conta", items: [
     { to: "/perfil", label: "Perfil", hint: "Dados acadêmicos, senha e backup", icon: UserRound },
     { to: "/configuracoes", label: "Configurações", hint: "Temas, fonte e acessibilidade", icon: Settings },
+    { to: "/privacidade", label: "Privacidade", hint: "Seus dados, seus direitos (LGPD)", icon: ShieldCheck },
   ] },
 ];
 

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import { clearAllLocal } from "@/lib/db";
+import { PRIVACY_VERSION } from "@/brand";
 
 interface AuthResult {
   error?: string;
@@ -16,6 +17,8 @@ interface AuthContextValue {
   signUp: (email: string, password: string, displayName: string) => Promise<AuthResult>;
   signIn: (email: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
+  /** Exclui a conta e todos os dados (LGPD art. 18, VI). */
+  deleteAccount: () => Promise<AuthResult>;
   resetPassword: (email: string) => Promise<AuthResult>;
   updatePassword: (password: string) => Promise<AuthResult>;
   updateDisplayName: (displayName: string) => Promise<AuthResult>;
@@ -63,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email,
           password,
           options: {
-            data: { display_name: displayName },
+            data: { display_name: displayName, consent_at: new Date().toISOString(), consent_version: PRIVACY_VERSION },
             emailRedirectTo: `${redirectBase()}login`,
           },
         });
@@ -77,6 +80,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async signOut() {
         await supabase.auth.signOut();
         await clearAllLocal();
+      },
+      async deleteAccount() {
+        const { error } = await supabase.rpc("delete_my_account");
+        if (error) return { error: "Não foi possível excluir agora. Tente de novo em instantes." };
+        await supabase.auth.signOut().catch(() => undefined);
+        await clearAllLocal();
+        return {};
       },
       async resetPassword(email) {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {

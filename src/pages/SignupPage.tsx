@@ -4,6 +4,8 @@ import { MailCheck, UserPlus } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { PasswordInput } from "@/components/ui/PasswordInput";
+import { PasswordStrength } from "@/components/ui/PasswordStrength";
+import { checkPassword } from "@/lib/password";
 import { useAuth } from "@/contexts/AuthContext";
 import { BRAND } from "@/brand";
 
@@ -16,6 +18,7 @@ export function SignupPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -24,8 +27,13 @@ export function SignupPage() {
       setError("As senhas não coincidem.");
       return;
     }
-    if (password.length < 8) {
-      setError("A senha precisa ter pelo menos 8 caracteres.");
+    const check = checkPassword(password, email);
+    if (check.problem) {
+      setError(check.problem);
+      return;
+    }
+    if (!consent) {
+      setError("Para criar a conta, confirme que leu o aviso de privacidade.");
       return;
     }
     setLoading(true);
@@ -103,8 +111,9 @@ export function SignupPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mínimo 8 caracteres"
+              placeholder="Mínimo 10 caracteres"
             />
+            <PasswordStrength password={password} email={email} />
           </div>
           <div className="field">
             <label htmlFor="confirm">Confirmar senha</label>
@@ -117,7 +126,11 @@ export function SignupPage() {
               placeholder="Repita a senha"
             />
           </div>
-          {error && <div className="error-text">{error}</div>}
+          <label className="consent">
+            <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
+            <span>Li e concordo com o <Link to="/privacidade" target="_blank">aviso de privacidade</Link>. Meus dados ficam só comigo e eu posso exportar ou apagar tudo quando quiser.</span>
+          </label>
+          {error && <div className="error-text" role="alert">{error}</div>}
           <button className="btn btn--primary btn--block" type="submit" disabled={loading}>
             <UserPlus size={18} /> {loading ? "Criando conta…" : "Criar conta"}
           </button>

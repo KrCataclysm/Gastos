@@ -4,6 +4,8 @@ import { KeyRound } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { PasswordInput } from "@/components/ui/PasswordInput";
+import { PasswordStrength } from "@/components/ui/PasswordStrength";
+import { checkPassword } from "@/lib/password";
 import { useAuth } from "@/contexts/AuthContext";
 import { BRAND } from "@/brand";
 
@@ -22,8 +24,9 @@ export function ResetPasswordPage() {
       setError("As senhas não coincidem.");
       return;
     }
-    if (password.length < 8) {
-      setError("A senha precisa ter pelo menos 8 caracteres.");
+    const check = checkPassword(password);
+    if (check.problem) {
+      setError(check.problem);
       return;
     }
     setLoading(true);
@@ -53,8 +56,9 @@ export function ResetPasswordPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mínimo 8 caracteres"
+              placeholder="Mínimo 10 caracteres"
             />
+            <PasswordStrength password={password} />
           </div>
           <div className="field">
             <label htmlFor="confirm">Confirmar nova senha</label>

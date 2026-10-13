@@ -1,9 +1,45 @@
 import { fileURLToPath, URL } from "node:url";
-import { defineConfig } from "vite";
+import { createHash } from "node:crypto";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
 const base = "/Gastos/";
+
+/** Política de segurança de conteúdo (CSP) por <meta>: o GitHub Pages não deixa definir cabeçalhos.
+ *  Scripts inline recebem hash SHA-256 calculado na hora do build (nada de 'unsafe-inline' em script). */
+function cspPlugin(): Plugin {
+  return {
+    name: "prumo-csp",
+    apply: "build",
+    transformIndexHtml: {
+      order: "post",
+      handler(html) {
+        const hashes = Array.from(html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)).map(
+          (m) => `'sha256-${createHash("sha256").update(m[1]).digest("base64")}'`,
+        );
+        const csp = [
+          "default-src 'self'",
+          `script-src 'self' ${hashes.join(" ")}`.trim(),
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data: blob:",
+          "font-src 'self' data:",
+          "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+          "worker-src 'self'",
+          "manifest-src 'self'",
+          "object-src 'none'",
+          "base-uri 'self'",
+          "form-action 'self'",
+          "frame-src 'none'",
+        ].join("; ");
+        return html.replace(
+          "<head>",
+          `<head>\n    <meta http-equiv="Content-Security-Policy" content="${csp}" />\n    <meta name="referrer" content="no-referrer" />`,
+        );
+      },
+    },
+  };
+}
 
 export default defineConfig({
   base,
@@ -14,6 +50,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    cspPlugin(),
     VitePWA({
       registerType: "prompt",
       injectRegister: "auto",
