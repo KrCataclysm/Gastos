@@ -1,5 +1,6 @@
 import { lazy, Suspense, type ReactNode } from "react";
 import { Navigate, Route, BrowserRouter, Routes } from "react-router-dom";
+import { PrivacyPage } from "@/pages/PrivacyPage";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { DataProvider } from "@/contexts/DataContext";
@@ -70,6 +71,7 @@ function Router() {
       <Route path="/cadastro" element={<PublicOnly><SignupPage /></PublicOnly>} />
       <Route path="/esqueci-senha" element={<PublicOnly><ForgotPasswordPage /></PublicOnly>} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/privacidade" element={<PrivacyPage />} />
 
       <Route element={<ProtectedArea />}>
         <Route

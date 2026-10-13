@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { BarChart3, BookOpen, Flag, FolderKanban, Landmark, LayoutDashboard, MoreHorizontal, Receipt, Settings, Tags, Target, UserRound, Wrench, type LucideIcon } from "lucide-react";
 import { BRAND } from "@/brand";
@@ -7,6 +8,7 @@ import { UpdateBanner } from "@/components/layout/UpdateBanner";
 import { SyncBadge } from "@/components/layout/SyncBadge";
 import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIdleSignOut } from "@/lib/idle";
 import { useData } from "@/contexts/DataContext";
 
 interface NavItem {
@@ -42,7 +44,9 @@ const linkClass = ({ isActive }: { isActive: boolean }) => `nav-item${isActive ?
 export function AppShell() {
   const location = useLocation();
   const { loading } = useData();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const onIdle = useCallback(() => void signOut(), [signOut]);
+  useIdleSignOut(onIdle);
   const name = (user?.user_metadata?.display_name as string | undefined) ?? user?.email?.split("@")[0] ?? "";
 
   return (

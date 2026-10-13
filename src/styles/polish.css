@@ -184,3 +184,52 @@ body {
 .update-banner svg { color: var(--color-accent-strong); }
 @media (prefers-reduced-motion: no-preference) { .update-banner { animation: toast-in 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) both; } .update-banner svg { animation: spin-once 1.2s ease 0.4s; } }
 @keyframes spin-once { to { transform: rotate(360deg); } }
+
+/* ---------- Segurança e privacidade ---------- */
+.pw-meter { display: grid; gap: 6px; margin-top: 8px; }
+.pw-meter__bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.pw-meter__bars span { height: 5px; border-radius: 999px; background: var(--color-panel-alt); transition: background 0.35s ease, transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1); }
+.pw-meter[data-score="1"] .on { background: var(--color-expense); }
+.pw-meter[data-score="2"] .on { background: var(--color-warning); }
+.pw-meter[data-score="3"] .on { background: var(--color-info); }
+.pw-meter[data-score="4"] .on { background: var(--color-income); }
+.pw-meter__bars .on { transform: scaleY(1.5); }
+.pw-meter__text { display: flex; gap: 8px; align-items: baseline; font-size: 12px; color: var(--color-text-muted); }
+.pw-meter__text b { color: var(--color-text); font-weight: 700; }
+
+.consent { display: flex; gap: 10px; align-items: flex-start; font-size: 0.8125rem; line-height: 1.45; color: var(--color-text-muted); cursor: pointer; }
+.consent input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--color-accent); flex-shrink: 0; }
+.consent a { color: var(--color-accent-strong); font-weight: 600; }
+
+.danger-zone { display: grid; gap: 12px; padding: 14px; border: 1px solid color-mix(in srgb, var(--color-expense) 45%, var(--color-border)); border-radius: var(--color-radius); background: var(--color-expense-soft); }
+.danger-zone p { font-size: 13px; line-height: 1.5; }
+.danger-zone__actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.btn--danger-solid { background: var(--color-expense); border-color: var(--color-expense); color: #fff; }
+.btn--danger-solid:hover:not(:disabled) { filter: brightness(0.92); }
+
+.legal { min-height: 100dvh; }
+.legal__head { display: flex; align-items: center; justify-content: space-between; max-width: 760px; margin: 0 auto; padding: 18px 20px 0; }
+.legal__back { display: inline-flex; gap: 6px; align-items: center; font-size: 0.875rem; font-weight: 600; text-decoration: none; color: var(--color-text-muted); }
+.legal__back:hover { color: var(--color-text); }
+.legal__brand { display: flex; align-items: center; gap: 9px; font-weight: 800; letter-spacing: -0.03em; }
+.legal__body { max-width: 760px; margin: 0 auto; padding: 18px 20px 72px; }
+.legal__body h1 { margin: 6px 0 10px; font-size: clamp(1.7rem, 3vw + 1rem, 2.4rem); }
+.legal__body h2 { margin: 30px 0 8px; font-size: 1.1rem; }
+.legal__body p, .legal__body li { color: var(--color-text-muted); line-height: 1.65; font-size: 0.95rem; }
+.legal__body ul { padding-left: 20px; display: grid; gap: 6px; margin: 8px 0; }
+.legal__body b { color: var(--color-text); }
+.legal__body a { color: var(--color-accent-strong); }
+.legal__lead { font-size: 1.05rem !important; max-width: 60ch; }
+.legal__cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 22px 0 6px; }
+.legal__cards > div { display: grid; gap: 4px; padding: 14px; border: 1px solid var(--color-border); border-radius: var(--color-radius); background: var(--color-panel); box-shadow: var(--shadow-sm); }
+.legal__cards svg { color: var(--color-accent-strong); }
+.legal__cards span { font-size: 12.5px; color: var(--color-text-muted); line-height: 1.45; }
+.legal__foot { display: flex; align-items: center; gap: 8px; margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--color-border); color: var(--color-text-muted); font-weight: 600; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .legal__body > *, .legal__cards > div { animation: rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 40ms); }
+  .legal__cards > div:nth-child(2) { animation-delay: 0.08s; } .legal__cards > div:nth-child(3) { animation-delay: 0.16s; } .legal__cards > div:nth-child(4) { animation-delay: 0.24s; }
+  .legal__cards > div { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .legal__cards > div:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .danger-zone { animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+}
