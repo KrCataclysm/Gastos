@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { PasswordStrength } from "@/components/ui/PasswordStrength";
 import { checkPassword } from "@/lib/password";
 import { getIdleMinutes, IDLE_OPTIONS, setIdleMinutes } from "@/lib/idle";
+import { ACCOUNT_DELETION_ENABLED } from "@/brand";
 import { useAuth } from "@/contexts/AuthContext";
 import { useData } from "@/contexts/DataContext";
 import { Avatar } from "@/components/ui/Avatar";
@@ -223,7 +224,9 @@ export function ProfilePage() {
           <span className="text-muted" style={{ fontSize: 12 }}><ShieldCheck size={12} aria-hidden /> Recomendado em aparelho compartilhado.</span>
         </div>
 
-        {!confirmDelete ? (
+        {!ACCOUNT_DELETION_ENABLED ? (
+          <p className="text-muted" style={{ fontSize: 13 }}>Para excluir sua conta e todos os seus dados, fale com quem te passou o link do app. Você pode baixar tudo antes em “Exportar backup”.</p>
+        ) : !confirmDelete ? (
           <button className="btn btn--danger btn--block" onClick={() => setConfirmDelete(true)}><Trash2 size={16} /> Excluir minha conta e dados</button>
         ) : (
           <div className="danger-zone">

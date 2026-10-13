@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, DatabaseZap, Download, Lock, ShieldCheck, Trash2, UserCheck } from "lucide-react";
-import { BRAND, PRIVACY_CONTACT, PRIVACY_VERSION } from "@/brand";
+import { ACCOUNT_DELETION_ENABLED, BRAND, PRIVACY_CONTACT, PRIVACY_VERSION } from "@/brand";
 import { Logo } from "@/components/brand/Logo";
 
 /** Aviso de privacidade (LGPD, Lei 13.709/2018) em linguagem simples. Página pública. */
@@ -21,7 +21,7 @@ export function PrivacyPage() {
           <div><Lock size={18} aria-hidden /><b>Só você vê</b><span>Cada conta enxerga apenas os próprios dados.</span></div>
           <div><DatabaseZap size={18} aria-hidden /><b>Sem rastreio</b><span>Sem anúncios, sem analytics, sem venda de dados.</span></div>
           <div><Download size={18} aria-hidden /><b>Leve com você</b><span>Exporte tudo em JSON ou CSV quando quiser.</span></div>
-          <div><Trash2 size={18} aria-hidden /><b>Apague tudo</b><span>Exclusão da conta em um toque, em Perfil.</span></div>
+          <div><Trash2 size={18} aria-hidden /><b>Apague tudo</b><span>{ACCOUNT_DELETION_ENABLED ? "Exclusão da conta em um toque, em Perfil." : "Peça a exclusão da conta e dos dados quando quiser."}</span></div>
         </section>
 
         <h2>1. Quem é o controlador</h2>
@@ -57,7 +57,7 @@ export function PrivacyPage() {
         <ul>
           <li><b>Acesso e portabilidade:</b> Perfil › Exportar backup (JSON); Relatórios › CSV.</li>
           <li><b>Correção:</b> edite nome, dados acadêmicos e registros no próprio app.</li>
-          <li><b>Eliminação:</b> Perfil › Excluir minha conta e dados.</li>
+          <li><b>Eliminação:</b> {ACCOUNT_DELETION_ENABLED ? "Perfil › Excluir minha conta e dados." : "peça pelo contato acima; apagamos a conta e todos os registros."}</li>
           <li><b>Revogar consentimento, pedir informações ou reclamar:</b> pelo contato acima. Você também pode procurar a ANPD (gov.br/anpd).</li>
         </ul>
 
